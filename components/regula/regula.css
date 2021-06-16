@@ -1,0 +1,1 @@
+.form-validation {	position: absolute;	right: 8px;	top: 0;	z-index: 2;	margin-top: 2px;	font-size: 9px;	font-weight: 400;	line-height: 12px;	letter-spacing: 0;	color: #dc3545;	transition: .3s;}.form-validation-left .form-validation {	right: auto;	left: 8px;}.form-inline-group .form-validation {	right: 14px;}

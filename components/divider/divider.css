@@ -1,0 +1,1 @@
+.divider::after {	display: block;	content: '';	height: 1px;	width: 100%;	background-image: linear-gradient(180deg, #2E3138 0%, #43464E 100%);	opacity: .9;}* + .divider,.divider + * {	margin-top: 2.5rem;}
