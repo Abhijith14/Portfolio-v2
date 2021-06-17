@@ -2,7 +2,7 @@
   <img alt="Logo" src="https://raw.githubusercontent.com/Abhijith14/Portfolio-v1/master/readme_assets/logo.png" width="400" />
 </div>
 <h1 align="center">
-  Abhijith14/Portfolio-v1
+  Abhijith14/Portfolio-v2
 </h1>
 <p align="center">
   The First iteration of <a href="https://abhijith14.github.io/Portfolio-v1/" target="_blank">Abhijith14/Portfolio-v1</a>
@@ -23,7 +23,7 @@
 </p>
 -->
 
-![demo](https://raw.githubusercontent.com/Abhijith14/Portfolio-v1/master/readme_assets/index.png)
+![demo](https://raw.githubusercontent.com/Abhijith14/Portfolio-v1/master/media/webs/4.png)
 
 ## 🚨 Forking this repo (please read!)
 
