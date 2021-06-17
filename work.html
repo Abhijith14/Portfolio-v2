@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="zoom_ele">
   <head>
     <title>Abhijith Udayakumar | Portfolio - Works</title>
     <meta charset="utf-8">
@@ -28,6 +28,13 @@
 	    	}
 	    }
     </style>
+    <script type="text/javascript">
+    function toggleZoomScreen() {
+      var data = document.getElementById('zoom_ele');
+       data.style.width = "950px";
+       data.style.height = "1080px";
+   } 
+  </script>
   </head>
   <body>
     <div class="page">
@@ -82,9 +89,9 @@
             <!-- <div class="col-10 col-sm-8 col-lg-6 col-xxl-7 text-center">
             	<img src="media/image-08-698x554.png" alt="" width="698" height="554">
             </div> -->
-            <div class="col-lg-6 col-xxl-12 pb-lg-4">
+            <div class="col-lg-10 col-xxl-10 pb-lg-4">
               <div class="title-icon group-20 mt-xxl-2"><span class="icon icon-circle icon-lg icon-style-4 mdi-codepen"></span>
-                <h2>My Works</h2>
+                <h2 onclick="toggleZoomScreen();">My Works</h2>
               </div>
               <div class="tab tab-line">
                 <ul class="nav nav-line nav-line-mod-2 bigger active">
