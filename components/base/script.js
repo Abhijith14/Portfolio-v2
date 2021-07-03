@@ -5,7 +5,8 @@ let components = window.components = {};
 
 components.fonts = {
 	selector: 'html',
-	styles: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap'
+	styles: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap',
+	rel: 'preconnect'
 };
 
 components.mdi = {
