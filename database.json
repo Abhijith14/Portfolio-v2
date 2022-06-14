@@ -1,0 +1,208 @@
+{
+  "Website": "Portfolio",
+  "active": true,
+  
+  "testimonials": [
+    {
+      "name": "Ramla M",
+      "designation": [
+        "Assistant Professor",
+        "Department of Computer Applications,",
+        "College of Science and Humanitites",
+        "SRM IST"
+      ],
+      "content": [
+        "A tremendous student who is an asset to the department. He is exceptionally assiduous. He is not only good-humored and friendly but also is ever-ready to assist his fellow peers and explore new horizons with them. Being Tech Savvy, looking through the concepts and applying the context is his technology quotient.",
+        "The best part of him is that he would reach out in a very respectful and kind manner. Furthermore, his questions are always thoughtful and penetrating. Brimming with inquisitive thinking and innovative ideas makes him stand apart. Needless to say, He is a true quest for knowledge."
+      ]
+    },
+    {
+      "name": "B Udayakumar",
+      "designation": [
+        "IT Coordinator"
+      ],
+      "content": [
+        "This team is extremely client focused and highly responsible with profound understanding of our requirements. It is certified that the assignment work given to BUDDY Developer has been completed successfully. We are enormously satisfied with their quality and team work."
+      ]
+    }
+  ],
+
+  "badges": [
+    {
+      "name": "AI Appreciate 2021",
+      "desc": "AI FOR ALL | DIGITAL INDIA - INTEL INDIA",
+      "date": "Jan 2022",
+      "img": "media/badges/Abhijith Udayakumar_AI_APPRECIATE_BADGE.png" 
+    },
+    {
+      "name": "Blog",
+      "desc": "Self Starter | Hashnode",
+      "date": "July 2021",
+      "img": "media/badges/hashnode_starter.png" 
+    },
+    {
+      "name": "AI Aware 2021",
+      "desc": "AI FOR ALL | DIGITAL INDIA - INTEL INDIA",
+      "date": "Jan 2022",
+      "img": "media/badges/Abhijith Udayakumar_AI_AWARE_BADGE.png"
+    }
+  ],
+
+  "certificates": [
+    {
+      "name": "Cognitive Application",
+      "desc": "Certificate of Participation | TECH-ANALOGY",
+      "date": "Aug 2021",
+      "img": "media/certificates/cognitive.png"
+    },
+    {
+      "name": "Cognitive Application",
+      "desc": "Certificate of Excellence | TECH-ANALOGY",
+      "date": "Aug 2021",
+      "img": "media/certificates/cognitive2.png"
+    },
+    {
+      "name": "Artificial Intelligence",
+      "desc": "Certificate of Completion | MyCaptain",
+      "date": "Jan 2021",
+      "img": "media/certificates/AI-2.png"
+    },
+    {
+      "name": "Data Analytics",
+      "desc": "Certificate of Participation | MyCaptain",
+      "date": "Feb 2021",
+      "img": "media/certificates/DataAnalaytics-1.png"
+    },
+    {
+      "name": "Artificial Intelligence",
+      "desc": "Certificate of Competency | MyCaptain",
+      "date": "Jan 2021",
+      "img": "media/certificates/AI-1.png"
+    },
+    {
+      "name": "SRM WRRC",
+      "desc": "Certificate of Excellence | SRM WRRC",
+      "date": "Oct 2021",
+      "img": "media/certificates/srmredesign.png"
+    },
+    {
+      "name": "Internshala Student Partner",
+      "desc": "",
+      "date": "2021",
+      "img": "media/certificates/internshala.png"
+    },
+    {
+      "name": "Python Programming Contest",
+      "desc": "Certificate of Achievement | UIT",
+      "date": "Aug 2020",
+      "img": "media/certificates/UIT - python.png"
+    }
+  ],
+
+  "works": [
+    {
+      "name": "PythonElab",
+      "category": "Python",
+      "logo": "media/lang/python.png",
+      "contributors": 1,
+      "issues": 0,
+      "stars": 8,
+      "forks": 0,
+      "desc": "Python Elab",
+      "repo": "https://github.com/Abhijith14/PythonElab",
+      "header": "MOST STARRED REPO",
+      "H_visible": 1
+    },
+    {
+      "name": "snakepygame",
+      "category": "Python",
+      "logo": "media/lang/python.png",
+      "contributors": 1,
+      "issues": 0,
+      "stars": 4,
+      "forks": 0,
+      "desc": "A Simple snake game created using Python.",
+      "repo": "https://github.com/Abhijith14/snakepygame",
+      "header": "",
+      "H_visible": 0
+    },
+    {
+      "name": "discord-bot",
+      "category": "Python",
+      "logo": "media/project_icons/discord-bot.png",
+      "contributors": 1,
+      "issues": 0,
+      "stars": 8,
+      "forks": 10,
+      "desc": "A feature-rich bot for Discord.",
+      "repo": "https://github.com/Abhijith14/discord-bot",
+      "header": "MOST FORKED REPO",
+      "H_visible": 1
+    },
+    {
+      "name": "PROJECT-CONNECT",
+      "category": "Python",
+      "logo": "media/project_icons/project-connect.png",
+      "contributors": 1,
+      "issues": 0,
+      "stars": 3,
+      "forks": 0,
+      "desc": "A python project for Clipboard Networking",
+      "repo": "https://github.com/Abhijith14/PROJECT-CONNECT-v1",
+      "header": "",
+      "H_visible": 0
+    },
+    {
+      "name": "PROJECT-L.A.Z.Y",
+      "category": "Python",
+      "logo": "media/project_icons/project-lazy.png",
+      "contributors": 1,
+      "issues": 0,
+      "stars": 5,
+      "forks": 0,
+      "desc": "Automation to attend online classes based on timetable.",
+      "repo": "https://github.com/Abhijith14/PROJECT-L.A.Z.Y",
+      "header": "",
+      "H_visible": 1
+    },
+    {
+      "name": "CowinScrape",
+      "category": "Python",
+      "logo": "media/project_icons/cowinscrape.png",
+      "contributors": 1,
+      "issues": 0,
+      "stars": 3,
+      "forks": 0,
+      "desc": "A Python Application to get the number of vaccination centers available in your district.",
+      "repo": "https://github.com/Abhijith14/Cowin-Scrape",
+      "header": "",
+      "H_visible": 0
+    },
+    {
+      "name": "GitSocialPreview",
+      "category": "Python",
+      "logo": "media/lang/python.png",
+      "contributors": 1,
+      "issues": 0,
+      "stars": 3,
+      "forks": 0,
+      "desc": "An Auto Generator for Github Social Preview",
+      "repo": "https://github.com/Abhijith14/GitSocialPreview",
+      "header": "",
+      "H_visible": 0
+    },
+    {
+      "name": "GithubAuto",
+      "category": "Python",
+      "logo": "media/lang/python.png",
+      "contributors": 1,
+      "issues": 0,
+      "stars": 7,
+      "forks": 0,
+      "desc": "",
+      "repo": "https://github.com/Abhijith14/GithubAuto",
+      "header": "",
+      "H_visible": 0
+    }
+  ]
+}
