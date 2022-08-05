@@ -5,6 +5,7 @@
   "testimonials": [
     {
       "name": "Ramla M",
+      "image": "media/testimonial/2.png",
       "designation": [
         "Assistant Professor",
         "Department of Computer Applications,",
@@ -17,7 +18,19 @@
       ]
     },
     {
+      "name": "Einstein Little Champs",
+      "image": "media/testimonial/3.png",
+      "designation": [
+        "A Client,",
+        "Buddy Developer"
+      ],
+      "content": [
+        "It was great working with Buddy Developer Team, especially want to convey our thanks to Abhijith, for making all the changes patiently and getting our projects live timely. The work was effective and efficient. Amazing response and will definitely recommend Buddy Developer to others."
+      ]
+    },
+    {
       "name": "B Udayakumar",
+      "image": "media/testimonial/1.png",
       "designation": [
         "IT Coordinator"
       ],
@@ -99,6 +112,33 @@
     }
   ],
 
+  "partners": [
+    {
+      "img": "media/collab/jyothis.png"
+    },
+    {
+      "img": "media/collab/tzd.png"
+    },
+    {
+      "img": "media/collab/gcs.png"
+    },
+    {
+      "img": "media/collab/ash.png"
+    },
+    {
+      "img": "media/collab/allsaints.png"
+    },
+    {
+      "img": "media/collab/pelleti.png"
+    },
+    {
+      "img": "media/collab/smilelife.png"
+    },
+    {
+      "img": "media/collab/elc.png"
+    }
+  ],
+
   "works": [
     {
       "name": "PythonElab",
@@ -111,7 +151,7 @@
       "desc": "Python Elab",
       "repo": "https://github.com/Abhijith14/PythonElab",
       "header": "MOST STARRED REPO",
-      "H_visible": 1
+      "H_visible": 0
     },
     {
       "name": "snakepygame",
@@ -176,7 +216,7 @@
       "desc": "A Python Application to get the number of vaccination centers available in your district.",
       "repo": "https://github.com/Abhijith14/Cowin-Scrape",
       "header": "",
-      "H_visible": 0
+      "H_visible": 1
     },
     {
       "name": "GitSocialPreview",
@@ -203,6 +243,77 @@
       "repo": "https://github.com/Abhijith14/GithubAuto",
       "header": "",
       "H_visible": 0
+    },
+    {
+      "name": "AutomationFlight",
+      "category": "Python",
+      "logo": "media/lang/python.png",
+      "contributors": 1,
+      "issues": 0,
+      "stars": 7,
+      "forks": 0,
+      "desc": "",
+      "repo": "https://github.com/Abhijith14/AutomationFlight",
+      "header": "",
+      "H_visible": 0
+    },
+    {
+      "name": "PyElab",
+      "category": "Python",
+      "logo": "media/lang/python.png",
+      "contributors": 1,
+      "issues": 0,
+      "stars": 7,
+      "forks": 0,
+      "desc": "Elab Python Automation",
+      "repo": "https://github.com/Abhijith14/PyElab",
+      "header": "",
+      "H_visible": 0
+    },
+    {
+      "name": "AudioConverter-Python",
+      "category": "Python",
+      "logo": "media/lang/python.png",
+      "contributors": 1,
+      "issues": 0,
+      "stars": 7,
+      "forks": 0,
+      "desc": "Video to Audio Conversation",
+      "repo": "https://github.com/Abhijith14/AudioConverter-Python",
+      "header": "",
+      "H_visible": 0
+    },
+    {
+      "name": "CSVautomation",
+      "category": "Python",
+      "logo": "media/lang/python.png",
+      "contributors": 1,
+      "issues": 0,
+      "stars": 7,
+      "forks": 0,
+      "desc": "",
+      "repo": "https://github.com/Abhijith14/CSVautomation",
+      "header": "",
+      "H_visible": 0
+    },
+    {
+      "name": "OpenCV-projects",
+      "category": "Machine Learning",
+      "logo": "media/lang/python.png",
+      "contributors": 1,
+      "issues": 0,
+      "stars": 8,
+      "forks": 0,
+      "desc": "Computer Vision Projects - OpenCV",
+      "repo": "https://github.com/Abhijith14/OpenCV-projects",
+      "header": "",
+      "H_visible": 0
     }
-  ]
+  ],
+  "social":{
+      "Github": "https://github.com/Abhijith14",
+      "Kaggle": "https://www.kaggle.com/abhijithudayakumar",
+      "LinkedIn" : "https://www.linkedin.com/in/abhijith-udayakumar-6372b91a3/",
+      "Resume" : "https://github.com/Abhijith14/Abhijith14/raw/master/Resume.pdf"
+    }
 }
