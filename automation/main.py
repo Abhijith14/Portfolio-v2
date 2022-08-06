@@ -110,9 +110,21 @@ for ind, partner in enumerate(data['partners']):
 var_work = ""
 for work in data['works']:
     if work['H_visible']:
+        var_header = ""
+        if work['header']:
+          var_header = '''<div class="pricing-badge">'''+ str(work['header']) +'''</div>'''
+        var_scope = '''<button class="btn btn-sm" onclick='window.open("''' + str(work['repo']) + '''");'>See Repo</button>'''
+        if work['Access'] == 1:
+          var_scope = '''<button class="btn btn-sm" data-modal-trigger="{&quot;target&quot;:&quot;#modal&quot;}">See Repo</button>'''
+        if work['category'] == "Websites":
+          var_scope = '''<button class="btn btn-sm"
+                                onclick='window.open("''' + str(work['link']) + '''");'>Visit Website</button><br>
+                              <button class="btn btn-sm"
+                                onclick='window.open("''' + str(work['repo']) + '''");'>See Repo</button>
+                            '''
         var_work = var_work + '''
         <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                <div class="pricing-body">
+                '''+ var_header +'''<div class="pricing-body">
                     <div class="pricing-title biggest h2">''' + str(work['name']) + '''</div>
                     <img src="''' + str(work['logo']) + '''" alt="''' + str(work['category']) + '''" width="100%" height="100%" loading="lazy">
                     <div class="pricing-divider">
@@ -129,8 +141,7 @@ for work in data['works']:
                     </ul>
                     </div>
                     <div class="pricing-btn">
-                    <button class="btn btn-sm" onclick='window.open("''' + str(work['repo']) + '''");'>See
-                        Repo</button>
+                    '''+var_scope+'''
                     </div>
                 </div>
                 </article>
@@ -175,7 +186,7 @@ code_homepage = '''
   <meta name="twitter:title" content="Abhijith Udayakumar | Portfolio" />
   <meta name="twitter:description" content="Abhijith Udayakumar's Portfolio Website" />
   <meta name="twitter:image" content="https://www.abhijithudayakumar.com/media/assets/welcome-400x400.png" />
-  <meta name="twitter:creator" content="@AbhijithUdayak1">
+  <meta name="twitter:creator" content="@'''+ data['social']['Twitter'] +'''">
 
   <meta property="go:url" content="https://www.abhijithudayakumar.com" />
   <meta property="go:type" content="website" />
@@ -766,13 +777,13 @@ code_homepage = '''
                   <ul class="list list-social">
                     <li class="list-social-item"><a aria-label="social"
                         class="icon icon-circle icon-md icon-style-1 mdi-facebook"
-                        href="https://www.facebook.com/abhijith.udayakumar.14" target="_blank" rel="noopener"></a></li>
+                        href="'''+ data['social']['Facebook'] +'''" target="_blank" rel="noopener"></a></li>
                     <li class="list-social-item"><a aria-label="social"
                         class="icon icon-circle icon-md icon-style-1 mdi-twitter"
-                        href="https://twitter.com/AbhijithUdayak1" target="_blank" rel="noopener"></a></li>
+                        href="'''+ data['social']['Twitter'] +'''" target="_blank" rel="noopener"></a></li>
                     <li class="list-social-item"><a aria-label="social"
                         class="icon icon-circle icon-md icon-style-1 mdi-instagram"
-                        href="https://www.instagram.com/a_b_h_i_j_i_t_h._.14/" target="_blank" rel="noopener"></a></li>
+                        href="'''+ data['social']['Instagram'] +'''" target="_blank" rel="noopener"></a></li>
                   </ul>
                 </div>
                 <div>
@@ -969,10 +980,27 @@ for ind, i in enumerate(var_cats): # category loop
             <!-- Row '''+ str(row_count) +''' -->
                 <div class="owl-carousel owl-style-1 owl-item-end" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
             '''
+        var_header = ""
+        if work['header']:
+          var_header = '''<div class="pricing-badge">'''+ str(work['header']) +'''</div>'''
+        var_scope = ""
+        if work['category'] == "Websites":
+          var_scope = '''<button class="btn btn-sm"
+                                onclick='window.open("''' + str(work['link']) + '''");'>Visit Website</button><br>
+                            '''
+        var_access_body = '''<li class="list-item">Contributors : ''' + str(work['contributors']) + '''</li>
+                            <li class="list-item">Issues : ''' + str(work['issues']) + '''</li>
+                            <li class="list-item">Stars : ''' + str(work['stars']) + '''</li>
+                            <li class="list-item">Forks : ''' + str(work['forks']) + '''</li>
+                            <li class="list-item disabled">Description : ''' + str(work['desc']) + '''</li>'''
+        if work['Access'] == 1:
+          var_scope = var_scope + '''<button class="btn btn-sm" data-modal-trigger="{&quot;target&quot;:&quot;#modal&quot;}">See Repo</button>'''
+          var_access_body = '''<li class="list-item disabled">This is a Private Repo !</li>'''
+        else:
+          var_scope = var_scope + '''<button class="btn btn-sm" onclick='window.open("''' + str(work['repo']) + '''");'>See Repo</button>'''
         var_body = var_body + '''
         <!-- Project '''+str(project_count)+''' -->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
+                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>''' + var_header +  '''<div class="pricing-body">
                         <div class="pricing-title biggest h2">''' + str(work['name']) + '''</div>
                         <img src="''' + str(work['logo']) + '''" loading="lazy">
                         <div class="pricing-divider">
@@ -981,15 +1009,11 @@ for ind, i in enumerate(var_cats): # category loop
                         <div class="pricing-list pricing-year">
                           
                           <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : ''' + str(work['contributors']) + '''</li>
-                            <li class="list-item">Issues : ''' + str(work['issues']) + '''</li>
-                            <li class="list-item">Stars : ''' + str(work['stars']) + '''</li>
-                            <li class="list-item">Forks : ''' + str(work['forks']) + '''</li>
-                            <li class="list-item disabled">Description : ''' + str(work['desc']) + '''</li>
+                            '''+ var_access_body +'''
                           </ul>
                         </div>
                         <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick='window.open("''' + str(work['repo']) + '''");'>See Repo</button>
+                          '''+ var_scope +'''
                         </div>
                       </div>
                     </article>
@@ -1139,7 +1163,7 @@ code_workpage='''
                 <!-- Tab panes-->
                 <div class="tab-content pt-3">
                   
-                	                                    '''+ var_body +'''       
+    '''+ var_body +'''       
 
                 </div>
                 <!-- Modal-->
@@ -1262,9 +1286,9 @@ code_workpage='''
                   <div>
                           <!-- List social-->
                           <ul class="list list-social">
-                            <li class="list-social-item"><a class="icon icon-circle icon-md icon-style-1 mdi-facebook" href="#"></a></li>
-                            <li class="list-social-item"><a class="icon icon-circle icon-md icon-style-1 mdi-twitter" href="#"></a></li>
-                            <li class="list-social-item"><a class="icon icon-circle icon-md icon-style-1 mdi-instagram" href="#"></a></li>
+                            <li class="list-social-item"><a class="icon icon-circle icon-md icon-style-1 mdi-facebook" href="'''+ data['social']['Facebook'] +'''"></a></li>
+                            <li class="list-social-item"><a class="icon icon-circle icon-md icon-style-1 mdi-twitter" href="'''+ data['social']['Twitter'] +'''"></a></li>
+                            <li class="list-social-item"><a class="icon icon-circle icon-md icon-style-1 mdi-instagram" href="'''+ data['social']['Instagram'] +'''"></a></li>
                           </ul>
                   </div>
                   <div>
@@ -1316,8 +1340,8 @@ code_workpage='''
 
 
 
-# save(code_homepage, './index.html')
-# save(code_workpage, './work.html')
+save(code_homepage, './index.html')
+save(code_workpage, './work.html')
 
 # Closing json
 f.close()
