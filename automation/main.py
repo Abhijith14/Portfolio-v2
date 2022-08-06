@@ -1,5 +1,5 @@
 import json 
-
+import math
 
 
 def save(html, filename):
@@ -838,10 +838,53 @@ code_homepage = '''
 # =====================================================================================================================================
 
 
+
+def mobile_view(category, position):
+  pro_count = position
+  mobile_body = '''<!-- mobile view -->'''
+  for _, mobile_data in enumerate(data['works']):
+    if _ >= position-1:
+      if mobile_data['category'] == category:
+        mobile_body = mobile_body + '''
+                        <!-- Project ''' + str(pro_count) + ''' (in mobile) -->
+                        <article class="pricing pricing-primary block block-sm block-center mobile-custom"
+                          data-animate='{"class":"fadeInUp"}'>
+                          <div class="pricing-body">
+                            <div class="pricing-title biggest h2">''' + str(mobile_data['name']) + '''</div>
+                            <img src="''' + str(mobile_data['logo']) + '''" loading="lazy">
+                            <div class="pricing-divider">
+                              <hr class="divider">
+                            </div>
+                            <div class="pricing-list pricing-year">
+
+                              <ul class="list list-marked-check d-inline-block text-left">
+                                <li class="list-item">Contributors : ''' + str(mobile_data['contributors']) + '''</li>
+                                <li class="list-item">Issues : ''' + str(mobile_data['issues']) + '''</li>
+                                <li class="list-item">Stars : ''' + str(mobile_data['stars']) + '''</li>
+                                <li class="list-item">Forks : ''' + str(mobile_data['forks']) + '''</li>
+                                <li class="list-item disabled">Description : ''' + str(mobile_data['desc']) + '''
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="pricing-btn">
+                              <button class="btn btn-sm"
+                                onclick='window.open("''' + str(mobile_data['repo']) + '''");'>See
+                                Repo</button>
+                            </div>
+                          </div>
+                        </article>
+        '''
+        pro_count = pro_count + 1
+  return mobile_body
+
+
+# print(mobile_view('Python', 4))
+
 var_cats = []
 for work in data['works']:
     var_cats.append(work['category'])
-var_cats = list(set(var_cats))
+
+var_cats = [i for n, i in enumerate(var_cats) if i not in var_cats[:n]]
 
 var_nav = ""
 for ind, nav_cats in enumerate(var_cats):
@@ -856,6 +899,108 @@ for ind, nav_cats in enumerate(var_cats):
             '''
 
 
+print(var_cats)
+
+var_body = ""
+curr_work_index = 0
+for ind, i in enumerate(var_cats): # category loop
+    var_body = var_body + '''
+    <!-- '''+ str(i) +''' -->
+    '''
+    if ind == 0:
+        var_body = var_body + '''
+            <div class="tab-pane fade show active" id="tabs-''' + str(ind+1) + '''">
+            '''
+    else:
+        var_body = var_body + '''
+            <div class="tab-pane fade" id="tabs-''' + str(ind+1) + '''">
+            '''
+    var_body = var_body + '''
+                    <div class="container position-relative">
+          <div class="group-20 d-sm-flex align-items-sm-end justify-content-sm-between text-center">
+            <h2></h2>
+            <div>
+                    <!-- Multi switch-->
+                    <div class="switch-text group-25 d-inline-flex align-items-center justify-content-center" id="multiswitch">
+                      <div><span class="switch-text-left biggest">Detailed View</span><span class="switch-text-right biggest ml-2 border-left pl-2">Normal View</span></div>
+                            <div class="switch-toggle-modern" data-multi-switch='{"targets":"#multiswitch, #pricing-group","state":true}'>
+                              <div class="guide"></div>
+                              <div class="slider">
+                                <div class="slider-dot"></div>
+                                <div class="slider-dot"></div>
+                              </div>
+                            </div>
+                    </div>
+            </div>
+          </div>
+
+          <div class="pricing-group offset-xs" id="pricing-group">'''
+
+    curr_cat_count = 0
+    for work in data['works']:
+      # count of works in category
+      if work['category'] == i:
+        curr_cat_count = curr_cat_count + 1
+    
+    # calculate number of rows required
+    num_rows = math.ceil(curr_cat_count/3)
+       
+    work_count = 0
+    row_count = 1
+    project_count = 1
+    for work in data['works']:
+      if work['category'] == i:
+        work_count = work_count + 1
+        if work_count > 3:
+          work_count = 1
+          row_count = row_count + 1        
+
+        if work_count == 1:
+          if row_count > 1:
+            if row_count == 2:
+              var_body = var_body + mobile_view(i, project_count)
+            var_body = var_body + '''</div>'''
+            var_body = var_body + '''
+            <!-- Row '''+ str(row_count) +''' -->
+                <div class="owl-carousel owl-style-1 owl-item-end pc-custom" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
+            '''
+          else:
+            var_body = var_body + '''
+            <!-- Row '''+ str(row_count) +''' -->
+                <div class="owl-carousel owl-style-1 owl-item-end" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
+            '''
+        var_body = var_body + '''
+        <!-- Project '''+str(project_count)+''' -->
+                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
+                      <div class="pricing-body">
+                        <div class="pricing-title biggest h2">''' + str(work['name']) + '''</div>
+                        <img src="''' + str(work['logo']) + '''" loading="lazy">
+                        <div class="pricing-divider">
+                          <hr class="divider">
+                        </div>
+                        <div class="pricing-list pricing-year">
+                          
+                          <ul class="list list-marked-check d-inline-block text-left">
+                            <li class="list-item">Contributors : ''' + str(work['contributors']) + '''</li>
+                            <li class="list-item">Issues : ''' + str(work['issues']) + '''</li>
+                            <li class="list-item">Stars : ''' + str(work['stars']) + '''</li>
+                            <li class="list-item">Forks : ''' + str(work['forks']) + '''</li>
+                            <li class="list-item disabled">Description : ''' + str(work['desc']) + '''</li>
+                          </ul>
+                        </div>
+                        <div class="pricing-btn">
+                          <button class="btn btn-sm" onclick='window.open("''' + str(work['repo']) + '''");'>See Repo</button>
+                        </div>
+                      </div>
+                    </article>
+        '''
+        project_count = project_count + 1
+    var_body = var_body + '''</div>
+          </div>
+        </div>
+                  </div>'''
+
+# print(var_body)
 
 
 code_workpage='''
@@ -975,7 +1120,7 @@ code_workpage='''
             <!-- <div class="col-10 col-sm-8 col-lg-6 col-xxl-7 text-center">
             	<img src="media/image-08-698x554.png" alt="" width="698" height="554">
             </div> -->
-            <div class="col-lg-10 col-xxl-10 pb-lg-4">
+            <div class="col-lg-10 col-xxl-12 pb-lg-4">
               <div class="title-icon group-20 mt-xxl-2"><span class="icon icon-circle icon-lg icon-style-4 mdi-codepen"></span>
                 <h2 onclick="toggleZoomScreen();">My Works</h2>
               </div>
@@ -994,1624 +1139,7 @@ code_workpage='''
                 <!-- Tab panes-->
                 <div class="tab-content pt-3">
                   
-                	<!-- Python -->
-                  <div class="tab-pane fade active show" id="tabs-1-1">
-                    <!-- <p class="bigger">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    <a class="btn btn-sm" href="#">Explore Now</a> -->
-                    <div class="container position-relative">
-          <div class="group-20 d-sm-flex align-items-sm-end justify-content-sm-between text-center">
-            <h2></h2>
-            <div>
-                    <!-- Multi switch-->
-                    <div class="switch-text group-25 d-inline-flex align-items-center justify-content-center" id="multiswitch">
-                      <div><span class="switch-text-left biggest">Detailed View</span><span class="switch-text-right biggest ml-2 border-left pl-2">Normal View</span></div>
-                            <div class="switch-toggle-modern" data-multi-switch='{"targets":"#multiswitch, #pricing-group","state":true}'>
-                              <div class="guide"></div>
-                              <div class="slider">
-                                <div class="slider-dot"></div>
-                                <div class="slider-dot"></div>
-                              </div>
-                            </div>
-                    </div>
-            </div>
-          </div>
-
-          <div class="pricing-group offset-xs" id="pricing-group">
-            <!-- Row 1 -->
-            <div class="owl-carousel owl-style-1 owl-item-end" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">PythonElab</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 8</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Python Elab</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/PythonElab');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">snakepygame</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 8</li>
-                            <li class="list-item">Forks : 0</li>
-                            <!-- <li class="list-item disabled">Description : A Collection of Visual Basic.NET Projects</li> -->
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/snakepygame');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-badge">Most Forked Repo</div>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">discord-bot</div>
-                        <img src="media/project_icons/discord-bot.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 3</li>
-                            <li class="list-item disabled">Description : A feature-rich bot for Discord.</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/discord-bot');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-
-                    <!-- mobile view -->
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">PROJECT-CONNECT</div>
-                        <img src="media/project_icons/project-connect.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 8</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : A python project for Clipboard Networking</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/PROJECT-CONNECT-v1');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">PROJECT-L.A.Z.Y</div>
-                        <img src="media/project_icons/project-lazy.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 8</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Automation to attend online classes based on timetable.</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/PROJECT-L.A.Z.Y');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">CowinScrape</div>
-                        <img src="media/project_icons/cowinscrape.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : A Python Application to get the number of vaccination centers available in your district.</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/Cowin-Scrape');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">GitSocialPreview</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 8</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : An Auto Generator for Github Social Preview</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/GitSocialPreview');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">GithubAuto</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <!-- <li class="list-item disabled">Description : A Collection of Visual Basic.NET Projects</li> -->
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/GithubAuto');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">AutomationFlight</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <!-- <li class="list-item disabled">Description : A feature-rich bot for Discord.</li> -->
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/AutomationFlight');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">PyElab</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Elab Python Automation</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/PyElab');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">AudioConverter-Python</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Video to Audio Conversation</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/AudioConverter-Python');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">CSVautomation</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <!-- <li class="list-item disabled">Description : A feature-rich bot for Discord.</li> -->
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/CSVautomation');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-
-
-            </div>
-            <!-- Row-2 -->
-            <div class="owl-carousel owl-style-1 owl-item-end pc-custom" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">PROJECT-CONNECT</div>
-                        <img src="media/project_icons/project-connect.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 8</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : A python project for Clipboard Networking</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/PROJECT-CONNECT-v1');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">PROJECT-L.A.Z.Y</div>
-                        <img src="media/project_icons/project-lazy.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 8</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Automation to attend online classes based on timetable.</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/PROJECT-L.A.Z.Y');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">CowinScrape</div>
-                        <img src="media/project_icons/cowinscrape.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : A Python Application to get the number of vaccination centers available in your district.</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/Cowin-Scrape');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-            </div>
-            <!-- Row 3 -->
-            <div class="owl-carousel owl-style-1 owl-item-end pc-custom" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">GitSocialPreview</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 8</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : An Auto Generator for Github Social Preview</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/GitSocialPreview');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">GithubAuto</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <!-- <li class="list-item disabled">Description : A Collection of Visual Basic.NET Projects</li> -->
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/GithubAuto');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">AutomationFlight</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <!-- <li class="list-item disabled">Description : A feature-rich bot for Discord.</li> -->
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/AutomationFlight');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-            </div>
-            <!-- Row 4 -->
-            <div class="owl-carousel owl-style-1 owl-item-end pc-custom" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">PyElab</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Elab Python Automation</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/PyElab');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">AudioConverter-Python</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Video to Audio Conversation</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/AudioConverter-Python');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">CSVautomation</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <!-- <li class="list-item disabled">Description : A feature-rich bot for Discord.</li> -->
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/CSVautomation');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-            </div>
-          </div>
-        </div>
-                  </div>
-
-                  	<!-- Machine Learning -->
-                  <div class="tab-pane fade" id="tabs-1-2">
-                    <div class="container position-relative">
-          <div class="group-20 d-sm-flex align-items-sm-end justify-content-sm-between text-center">
-            <h2></h2>
-            <div>
-                    <!-- Multi switch-->
-                    <div class="switch-text group-25 d-inline-flex align-items-center justify-content-center" id="multiswitch">
-                      <div><span class="switch-text-left biggest">Detailed View</span><span class="switch-text-right biggest ml-2 border-left pl-2">Normal View</span></div>
-                            <div class="switch-toggle-modern" data-multi-switch='{"targets":"#multiswitch, #pricing-group","state":true}'>
-                              <div class="guide"></div>
-                              <div class="slider">
-                                <div class="slider-dot"></div>
-                                <div class="slider-dot"></div>
-                              </div>
-                            </div>
-                    </div>
-            </div>
-          </div>
-
-          <div class="pricing-group offset-xs" id="pricing-group">
-            <!-- Row 1 -->
-            <div class="owl-carousel owl-style-1 owl-item-end" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">OpenCV-projects</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 8</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Computer Vision Projects - OpenCV</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/OpenCV-projects');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">PROJECT-B.U.D.D.Y</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item disabled">This is a Private Repo !</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" data-modal-trigger="{&quot;target&quot;:&quot;#modal&quot;}">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">SnakeGame-ML</div>
-                        <img src="media/lang/python.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : AI paying Snake Game using Reinforcement Learning - Python</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/SnakeGame-ML');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Salary-Predictor</div>
-                        <img src="media/lang/jupyter.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Predict the salary for any given experience using LR</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/Salary-Predictor');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-            </div>
-
-
-            <!-- Row 2 -->
-            <div class="owl-carousel owl-style-1 owl-item-end" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-
-            		<!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center pc-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Salary-Predictor</div>
-                        <img src="media/lang/jupyter.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Predict the salary for any given experience using LR</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/Salary-Predictor');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-            </div>
-            
-          </div>
-        </div>
-                  </div>
-
-                  <!-- Java -->
-                  <div class="tab-pane fade" id="tabs-1-3">
-                    <div class="container position-relative">
-          <div class="group-20 d-sm-flex align-items-sm-end justify-content-sm-between text-center">
-            <h2></h2>
-            <div>
-                    <!-- Multi switch-->
-                    <div class="switch-text group-25 d-inline-flex align-items-center justify-content-center" id="multiswitch">
-                      <div><span class="switch-text-left biggest">Detailed View</span><span class="switch-text-right biggest ml-2 border-left pl-2">Normal View</span></div>
-                            <div class="switch-toggle-modern" data-multi-switch='{"targets":"#multiswitch, #pricing-group","state":true}'>
-                              <div class="guide"></div>
-                              <div class="slider">
-                                <div class="slider-dot"></div>
-                                <div class="slider-dot"></div>
-                              </div>
-                            </div>
-                    </div>
-            </div>
-          </div>
-
-          <div class="pricing-group offset-xs" id="pricing-group">
-            <!-- Row 1 -->
-            <div class="owl-carousel owl-style-1 owl-item-end" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">JavaElab</div>
-                        <img src="media/lang/java.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 8</li>
-                            <li class="list-item">Forks : 1</li>
-                            <li class="list-item disabled">Description : SRM IST - Java Elab</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/JavaElab');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-            </div>
-            
-          </div>
-        </div>
-                  </div>
-
-
-                  	<!-- C/C++ -->
-                  <div class="tab-pane fade" id="tabs-1-4">
-                    <div class="container position-relative">
-          <div class="group-20 d-sm-flex align-items-sm-end justify-content-sm-between text-center">
-            <h2></h2>
-            <div>
-                    <!-- Multi switch-->
-                    <div class="switch-text group-25 d-inline-flex align-items-center justify-content-center" id="multiswitch">
-                      <div><span class="switch-text-left biggest">Detailed View</span><span class="switch-text-right biggest ml-2 border-left pl-2">Normal View</span></div>
-                            <div class="switch-toggle-modern" data-multi-switch='{"targets":"#multiswitch, #pricing-group","state":true}'>
-                              <div class="guide"></div>
-                              <div class="slider">
-                                <div class="slider-dot"></div>
-                                <div class="slider-dot"></div>
-                              </div>
-                            </div>
-                    </div>
-            </div>
-          </div>
-
-          <div class="pricing-group offset-xs" id="pricing-group">
-            <!-- Row 1 -->
-            <div class="owl-carousel owl-style-1 owl-item-end" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">C-Programming-Elab</div>
-                        <img src="media/lang/C.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 8</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : C Elab</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/C-Programming-Elab');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">BAESIX-XII-Project</div>
-                        <img src="media/lang/cpp.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Basic Algorithmic file Encoded as a Simple program Intended to Entertain you eXtendly”- shortened as BAESIX:- is a software that facilitate the creation and sharing of information, ideas, career interests and other forms of expression using the basic programming language C++.</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/BAESIX-XII-Project');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">XI-Project-Calc</div>
-                        <img src="media/lang/cpp.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Scientific Calculator</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/XI-Project-Calc');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-            </div>
-            
-          </div>
-        </div>
-                  </div>
-
-
-                  <!-- C# -->
-                  <div class="tab-pane fade" id="tabs-1-5">
-                    <div class="container position-relative">
-          <div class="group-20 d-sm-flex align-items-sm-end justify-content-sm-between text-center">
-            <h2></h2>
-            <div>
-                    <!-- Multi switch-->
-                    <div class="switch-text group-25 d-inline-flex align-items-center justify-content-center" id="multiswitch">
-                      <div><span class="switch-text-left biggest">Detailed View</span><span class="switch-text-right biggest ml-2 border-left pl-2">Normal View</span></div>
-                            <div class="switch-toggle-modern" data-multi-switch='{"targets":"#multiswitch, #pricing-group","state":true}'>
-                              <div class="guide"></div>
-                              <div class="slider">
-                                <div class="slider-dot"></div>
-                                <div class="slider-dot"></div>
-                              </div>
-                            </div>
-                    </div>
-            </div>
-          </div>
-
-          <div class="pricing-group offset-xs" id="pricing-group">
-            <!-- Row 1 -->
-            <div class="owl-carousel owl-style-1 owl-item-end" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">StockManagement-Csharp</div>
-                        <img src="media/lang/csharp.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : A Stock Management Software for managing book stocks created in C# for windows.</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/StockManagement-Csharp');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-            </div>
-            
-          </div>
-        </div>
-                  </div>
-
-                  <!-- VB.NET -->
-                  <div class="tab-pane fade" id="tabs-1-6">
-                    <div class="container position-relative">
-          <div class="group-20 d-sm-flex align-items-sm-end justify-content-sm-between text-center">
-            <h2></h2>
-            <div>
-                    <!-- Multi switch-->
-                    <div class="switch-text group-25 d-inline-flex align-items-center justify-content-center" id="multiswitch">
-                      <div><span class="switch-text-left biggest">Detailed View</span><span class="switch-text-right biggest ml-2 border-left pl-2">Normal View</span></div>
-                            <div class="switch-toggle-modern" data-multi-switch='{"targets":"#multiswitch, #pricing-group","state":true}'>
-                              <div class="guide"></div>
-                              <div class="slider">
-                                <div class="slider-dot"></div>
-                                <div class="slider-dot"></div>
-                              </div>
-                            </div>
-                    </div>
-            </div>
-          </div>
-
-          <div class="pricing-group offset-xs" id="pricing-group">
-            <!-- Row 1 -->
-            <div class="owl-carousel owl-style-1 owl-item-end" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Digital-Clock</div>
-                        <img src="media/lang/vb.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 6</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : A Digital Clock made using vb.net</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/Digital-Clock');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">ModernCalculatorVB</div>
-                        <img src="media/lang/vb.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : A Modern Calculator for performing simple arithmetic operations using VB.NET</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/ModernCalculatorVB');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">VB.NET-PROJECTS</div>
-                        <img src="media/lang/vb.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                        	
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 6</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : A Collection of Visual Basic.NET Projects</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/VB.NET-PROJECTS');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-            </div>
-            
-          </div>
-        </div>
-                  </div>
-
-                  <!-- Websites -->
-                  <div class="tab-pane fade" id="tabs-1-7">
-                    <div class="container position-relative">
-          <div class="group-20 d-sm-flex align-items-sm-end justify-content-sm-between text-center">
-            <h2></h2>
-            <div>
-                    <!-- Multi switch-->
-                    <div class="switch-text group-25 d-inline-flex align-items-center justify-content-center" id="multiswitch">
-                      <div><span class="switch-text-left biggest">Detailed View</span><span class="switch-text-right biggest ml-2 border-left pl-2">Normal View</span></div>
-                            <div class="switch-toggle-modern" data-multi-switch='{"targets":"#multiswitch, #pricing-group","state":true}'>
-                              <div class="guide"></div>
-                              <div class="slider">
-                                <div class="slider-dot"></div>
-                                <div class="slider-dot"></div>
-                              </div>
-                            </div>
-                    </div>
-            </div>
-          </div>
-
-          <div class="pricing-group offset-xs" id="pricing-group">
-            <!-- Row 1 -->
-            <div class="owl-carousel owl-style-1 owl-item-end" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-                    
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">BUDDY-WEB-v3</div>
-                        <img src="media/webs/1.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Our Aim is your big smile when your imagination comes to the screen while assuring you the best quality service at the minimum cost.</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://www.createwithbuddy.tech');">Visit Website</button><br>
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/BUDDY-WEB-v3');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">BUDDY-WEB-v2</div>
-                        <img src="media/webs/2.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://abhijith14.github.io/BUDDY-WEB-v2/');">Visit Website</button><br>
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/BUDDY-WEB-v2');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">BUDDY-WEB-v1</div>
-                        <img src="media/webs/3.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <!-- <li class="list-item disabled">Description : First iteration of my personal website.<br>No longer valid!</li> -->
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://abhijith14.github.io/BUDDY-WEB-v1/');">Visit Website</button><br>
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/BUDDY-WEB-v1');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-
-                    <!-- Mobile Screen -->
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Portfolio-v2</div>
-                        <img src="media/webs/4.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Second iteration of my personal website</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://abhijith14.github.io/Portfolio-v2/');">Visit Website</button><br>
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/Portfolio-v2');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Portfolio-v1</div>
-                        <img src="media/webs/5.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 1</li>
-                            <li class="list-item disabled">Description : First iteration of my personal website.<br>No longer valid!</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://abhijith14.github.io/Portfolio-v1/');">Visit Website</button><br>
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/Portfolio-v1');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Einstein Little Champs</div>
-                        <img src="media/webs/6.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item disabled">This is a Private Repo !</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('http://einsteinlittlechamps.com/');">Visit Website</button><br>
-                          <button class="btn btn-sm" data-modal-trigger="{&quot;target&quot;:&quot;#modal&quot;}">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">TZD Global</div>
-                        <img src="media/webs/7.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item disabled">This is a Private Repo !</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('http://www.tzdglobal.com/');">Visit Website</button><br>
-                          <button class="btn btn-sm" data-modal-trigger="{&quot;target&quot;:&quot;#modal&quot;}">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Music Player - Vue JS</div>
-                        <img src="media/webs/8.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : A music player using vue</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://abhijith14.github.io/music-js/');">Visit Website</button><br>
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/music-js');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-
-  
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">ElabClone-Algos</div>
-                        <img src="media/webs/9.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Elab Website.</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('http://elabclone.herokuapp.com/');">Visit Website</button><br>
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/ElabClone-Algos');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">SRMIST-REDESIGN</div>
-                        <img src="media/webs/10.gif" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://srmre.herokuapp.com/');">Visit Website</button><br>
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/SRMIST-REDESIGN');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center mobile-custom" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Smile Life Foundation</div>
-                        <img src="media/webs/11.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item disabled">This is a Private Repo !</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://smilelifefoundationindia.org/');">Visit Website</button><br>
-                          <button class="btn btn-sm" data-modal-trigger="{&quot;target&quot;:&quot;#modal&quot;}">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-            </div>
-
-            <!-- Row-2 -->
-            <div class="owl-carousel owl-style-1 owl-item-end pc-custom" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-                    
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Portfolio-v2</div>
-                        <img src="media/webs/4.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Second iteration of my personal website</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://abhijith14.github.io/Portfolio-v2/');">Visit Website</button><br>
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/Portfolio-v2');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Portfolio-v1</div>
-                        <img src="media/webs/5.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 1</li>
-                            <li class="list-item disabled">Description : First iteration of my personal website.<br>No longer valid!</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://abhijith14.github.io/Portfolio-v1/');">Visit Website</button><br>
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/Portfolio-v1');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Einstein Little Champs</div>
-                        <img src="media/webs/6.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item disabled">This is a Private Repo !</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('http://einsteinlittlechamps.com/');">Visit Website</button><br>
-                          <button class="btn btn-sm" data-modal-trigger="{&quot;target&quot;:&quot;#modal&quot;}">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-            </div>
-
-            <!-- Row-3 -->
-            <div class="owl-carousel owl-style-1 owl-item-end pc-custom" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">TZD Global</div>
-                        <img src="media/webs/7.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item disabled">This is a Private Repo !</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('http://www.tzdglobal.com/');">Visit Website</button><br>
-                          <button class="btn btn-sm" data-modal-trigger="{&quot;target&quot;:&quot;#modal&quot;}">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Music Player - Vue JS</div>
-                        <img src="media/webs/8.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : A music player using vue</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://abhijith14.github.io/music-js/');">Visit Website</button><br>
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/music-js');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-
-  
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">ElabClone-Algos</div>
-                        <img src="media/webs/9.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                            <li class="list-item disabled">Description : Elab Website.</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('http://elabclone.herokuapp.com/');">Visit Website</button><br>
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/ElabClone-Algos');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-            </div>
-            
-            <!-- Row-4 -->
-            <div class="owl-carousel owl-style-1 owl-item-end pc-custom" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">SRMIST-REDESIGN</div>
-                        <img src="media/webs/10.gif" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 7</li>
-                            <li class="list-item">Forks : 0</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://srmre.herokuapp.com/');">Visit Website</button><br>
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/SRMIST-REDESIGN');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Jyothis Central School</div>
-                        <img src="media/webs/12.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item disabled">This is a Private Repo !</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://buddy-developer.github.io/ConstructionPage/');">Visit Website</button><br>
-                          <button class="btn btn-sm" data-modal-trigger="{&quot;target&quot;:&quot;#modal&quot;}">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-
-  
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Smile Life Foundation</div>
-                        <img src="media/webs/11.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item disabled">This is a Private Repo !</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://smilelifefoundationindia.org/');">Visit Website</button><br>
-                          <button class="btn btn-sm" data-modal-trigger="{&quot;target&quot;:&quot;#modal&quot;}">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-            </div>
-
-            	<!-- Row-5 -->
-            <div class="owl-carousel owl-style-1 owl-item-end pc-custom" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Jyothis Database</div>
-                        <img src="media/webs/13.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item disabled">This is a Private Repo !</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://jyothisdatabase.herokuapp.com/');">Visit Website</button><br>
-                          <button class="btn btn-sm" data-modal-trigger="{&quot;target&quot;:&quot;#modal&quot;}">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Pelleti International</div>
-                        <img src="media/webs/14.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item disabled">This is a Private Repo !</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://pelletiinternational.com/');">Visit Website</button><br>
-                          <button class="btn btn-sm" data-modal-trigger="{&quot;target&quot;:&quot;#modal&quot;}">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-            </div>
-
-          </div>
-        </div>
-                  </div>
-
-                  <!-- Apps -->
-                  <div class="tab-pane fade" id="tabs-1-8">
-                    <div class="container position-relative">
-          <div class="group-20 d-sm-flex align-items-sm-end justify-content-sm-between text-center">
-            <h2></h2>
-            <div>
-                    <!-- Multi switch-->
-                    <div class="switch-text group-25 d-inline-flex align-items-center justify-content-center" id="multiswitch">
-                      <div><span class="switch-text-left biggest">Detailed View</span><span class="switch-text-right biggest ml-2 border-left pl-2">Normal View</span></div>
-                            <div class="switch-toggle-modern" data-multi-switch='{"targets":"#multiswitch, #pricing-group","state":true}'>
-                              <div class="guide"></div>
-                              <div class="slider">
-                                <div class="slider-dot"></div>
-                                <div class="slider-dot"></div>
-                              </div>
-                            </div>
-                    </div>
-            </div>
-          </div>
-
-          <div class="pricing-group offset-xs" id="pricing-group">
-            <!-- Row 1 -->
-            <div class="owl-carousel owl-style-1 owl-item-end" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-badge">Most Starred Repo</div>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Calculator-App</div>
-                        <img src="media/lang/dart.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item">Contributors : 1</li>
-                            <li class="list-item">Issues : 0</li>
-                            <li class="list-item">Stars : 14</li>
-                            <li class="list-item">Forks : 2</li>
-                            <li class="list-item disabled">Description : A Neumorphic Calculator App created using Flutter.</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" onclick="window.open('https://github.com/Abhijith14/Calculator-App');">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-
-                    <!-- Pricing-->
-                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                      <div class="pricing-body">
-                        <div class="pricing-title biggest h2">Buddy-AI</div>
-                        <img src="media/lang/kotlin.png" loading="lazy">
-                        <div class="pricing-divider">
-                          <hr class="divider">
-                        </div>
-                        <div class="pricing-list pricing-year">
-                          
-                          <ul class="list list-marked-check d-inline-block text-left">
-                            <li class="list-item disabled">This is a Private Repo !</li>
-                          </ul>
-                        </div>
-                        <div class="pricing-btn">
-                          <button class="btn btn-sm" data-modal-trigger="{&quot;target&quot;:&quot;#modal&quot;}">See Repo</button>
-                        </div>
-                      </div>
-                    </article>
-            </div>
-            
-          </div>
-        </div>
-                  </div>
+                	                                    '''+ var_body +'''       
 
                 </div>
                 <!-- Modal-->
@@ -2789,7 +1317,7 @@ code_workpage='''
 
 
 # save(code_homepage, './index.html')
-save(code_workpage, './work.html')
+# save(code_workpage, './work.html')
 
 # Closing json
 f.close()
