@@ -227,7 +227,7 @@ code_homepage = '''
               <!-- <li class="navbar-navigation-root-item" data-menuanchor="work"><a class="navbar-navigation-root-link" href="#certificates">My Achievements</a>
                 </li> -->
               <li class="navbar-navigation-root-item" data-menuanchor="blog"><a class="navbar-navigation-root-link"
-                  href="https://blog.abhijithudayakumar.com/" target="_blank" rel="noopener">Blog</a>
+                  href="'''+ data['social']['blog'] +'''" target="_blank" rel="noopener">Blog</a>
               </li>
               <li class="navbar-navigation-root-item" data-menuanchor="contacts"><a class="navbar-navigation-root-link"
                   href="#contacts">Contact Me</a>
@@ -1114,7 +1114,7 @@ code_workpage='''
                 <li class="navbar-navigation-root-item active" data-menuanchor="work"><a class="navbar-navigation-root-link" href="">My Works</a>
                 </li>
                 
-                <li class="navbar-navigation-root-item" data-menuanchor="blog"><a class="navbar-navigation-root-link" href="index.html#blog">Blog</a>
+                <li class="navbar-navigation-root-item" data-menuanchor="blog"><a class="navbar-navigation-root-link" href="'''+ data['social']['blog'] +'''">Blog</a>
                 </li>
                 <li class="navbar-navigation-root-item" data-menuanchor="contacts"><a class="navbar-navigation-root-link" href="index.html#contacts">Contact Me</a>
                 </li>
