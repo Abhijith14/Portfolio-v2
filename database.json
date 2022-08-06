@@ -713,7 +713,7 @@
     {
       "name": "Calculator-App",
       "category": "Apps",
-      "logo": "media/lang/dart.png",
+      "logo": "https://raw.githubusercontent.com/Abhijith14/Calculator-App/master/readme_assets/icon-512x512.png",
       "contributors": 1,
       "issues": 0,
       "stars": 14,
