@@ -8,8 +8,12 @@ def save(html, filename):
     f_write.close()
 
 
-# Opening JSON file
-f = open('database.json')
+try:
+	# Opening JSON file
+	f = open('database.json')
+except FileNotFoundError as e:
+	print(e)
+	exit()
   
 data = json.load(f)
 
