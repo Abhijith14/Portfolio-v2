@@ -66,6 +66,12 @@
             "img": "media/certificates/cognitive.png"
         },
         {
+            "name": "IEEE Slash Key 2022",
+            "desc": "First Position | IEEE Slash Key",
+            "date": "Jul 2022",
+            "img": "media/certificates/slashkey.png"
+        },
+        {
             "name": "Cognitive Application",
             "desc": "Certificate of Excellence | TECH-ANALOGY",
             "date": "Aug 2021",
@@ -137,7 +143,7 @@
     "social": {
         "Github": "https://github.com/Abhijith14",
         "Kaggle": "https://www.kaggle.com/abhijithudayakumar",
-        "LinkedIn": "https://www.linkedin.com/in/abhijith-udayakumar-6372b91a3/",
+        "LinkedIn": "https://www.linkedin.com/in/abhijith-udayakumar/",
         "Resume": "https://github.com/Abhijith14/Abhijith14/raw/master/Resume.pdf",
         "Instagram": "https://www.instagram.com/a_b_h_i_j_i_t_h._.14/",
         "Twitter": "https://twitter.com/AbhijithUdayak1",
