@@ -1,4 +1,158 @@
+import json 
+import math
 
+
+def save(html, filename):
+    f_write = open(filename, "w")
+    f_write.write(html)
+    f_write.close()
+
+
+try:
+	# Opening JSON file
+	f = open('database.json')
+except FileNotFoundError as e:
+	print(e)
+	exit()
+  
+data = json.load(f)
+
+
+# testimonials
+var_testimonial = ""
+for testimonial in data['testimonials']:
+    var_testimonial = var_testimonial + '''
+    <article class="quote quote-creative">
+        <div class="media media-xs flex-column flex-xs-row-reverse">
+            <div class="media-left">
+                <div class="quote-author-figure">
+                    <div class="quote-author-image-decor"></div>
+                    <img class="quote-author-image rounded-circle" src="''' + str(testimonial['image']) + '''" alt="" width="64"
+                        height="64" loading="lazy" />
+                </div>
+            </div>
+            <div class="media-body">
+                <div class="quote-author-name h5" style="text-align: left;">''' + str(testimonial['name']) + '''</div>
+                <div class="quote-text" style="text-align: justify;">'''    
+    for _, breaker in enumerate(testimonial['content']):
+        if _ == len(testimonial['content']) - 1:
+            var_testimonial = var_testimonial + str(breaker)
+        else:
+            var_testimonial = var_testimonial + str(breaker) + '<br>'
+    end_code1 = '''</div>
+                <div class="quote-author-company" style="text-align: left;">'''
+    var_testimonial = var_testimonial + end_code1
+    for _, breaker in enumerate(testimonial['designation']):
+        if _ == len(testimonial['designation']) - 1:
+            var_testimonial = var_testimonial + str(breaker)
+        else:
+            var_testimonial = var_testimonial + str(breaker) + '<br>'           
+    end_code2 = '''
+                </div>
+            </div>
+        </div>
+    </article>
+    '''
+    var_testimonial = var_testimonial + end_code2
+
+
+# badges
+var_badge = ""
+for badge in data['badges']:
+    var_badge = var_badge + '''
+    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
+              <div class="pricing-body">
+                <a href="''' + str(badge['img']) + '''" target="_blank"><img
+                    src="''' + str(badge['img']) + '''" alt="" width="100%" height="100%"
+                    loading="lazy"></a>
+                <div class="pricing-divider">
+                  <hr class="divider">
+                </div>
+                <div class="pricing-btn">
+                  <center><b>''' + str(badge['name']) + '''</b></center>
+                  ''' + str(badge['desc']) + '''<br>''' + str(badge['date']) + '''
+                </div>
+              </div>
+            </article>
+    '''
+
+
+# certificates
+var_certificate = ""
+for certificates in data['certificates']:
+    var_certificate = var_certificate + '''
+    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
+              <div class="pricing-body">
+                <a href="''' + str(certificates['img']) + '''" target="_blank"><img
+                    src="''' + str(certificates['img']) + '''" alt="" width="100%" height="100%"
+                    loading="lazy"></a>
+                <div class="pricing-divider">
+                  <hr class="divider">
+                </div>
+                <div class="pricing-btn">
+                  <center><b>''' + str(certificates['name']) + '''</b></center>
+                  ''' + str(certificates['desc']) + '''<br>''' + str(certificates['date']) + '''
+                </div>
+              </div>
+            </article>
+    '''
+
+
+# partners
+var_partners = ""
+for ind, partner in enumerate(data['partners']):
+    var_partners = var_partners + '''
+     <div class="col-4 col-sm-3 partner-group-item"><a class="partner" aria-label="collab" id="removeHref'''+ str(ind+1) +'''"
+              href="https://www.abhijithudayakumar.com/" onclick="removeLink(this.id);" style="cursor: default;">
+              <img class="partner-image" src="'''+ str(partner['img']) +'''" alt="" width="600" height="180"
+                loading="lazy" />
+            </a></div>
+    '''
+
+
+# popular projects
+var_work = ""
+for work in data['works']:
+    if work['H_visible']:
+        var_header = ""
+        if work['header']:
+          var_header = '''<div class="pricing-badge">'''+ str(work['header']) +'''</div>'''
+        var_scope = '''<button class="btn btn-sm" onclick='window.open("''' + str(work['repo']) + '''");'>See Repo</button>'''
+        if work['Access'] == 1:
+          var_scope = '''<button class="btn btn-sm" data-modal-trigger="{&quot;target&quot;:&quot;#modal&quot;}">See Repo</button>'''
+        if work['category'] == "Websites":
+          var_scope = '''<button class="btn btn-sm"
+                                onclick='window.open("''' + str(work['link']) + '''");'>Visit Website</button><br>
+                              <button class="btn btn-sm"
+                                onclick='window.open("''' + str(work['repo']) + '''");'>See Repo</button>
+                            '''
+        var_work = var_work + '''
+        <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
+                '''+ var_header +'''<div class="pricing-body">
+                    <div class="pricing-title biggest h2">''' + str(work['name']) + '''</div>
+                    <img src="''' + str(work['logo']) + '''" alt="''' + str(work['category']) + '''" width="100%" height="100%" loading="lazy">
+                    <div class="pricing-divider">
+                    <hr class="divider">
+                    </div>
+                    <div class="pricing-list pricing-year">
+
+                    <ul class="list list-marked-check d-inline-block text-left">
+                        <li class="list-item">Contributors : ''' + str(work['contributors']) + '''</li>
+                        <li class="list-item">Issues : ''' + str(work['issues']) + '''</li>
+                        <li class="list-item">Stars : ''' + str(work['stars']) + '''</li>
+                        <li class="list-item">Forks : ''' + str(work['forks']) + '''</li>
+                        <li class="list-item disabled">Description : ''' + str(work['desc']) + '''</li>
+                    </ul>
+                    </div>
+                    <div class="pricing-btn">
+                    '''+var_scope+'''
+                    </div>
+                </div>
+                </article>
+        '''
+
+
+code_homepage = '''
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,7 +190,7 @@
   <meta name="twitter:title" content="Abhijith Udayakumar | Portfolio" />
   <meta name="twitter:description" content="Abhijith Udayakumar's Portfolio Website" />
   <meta name="twitter:image" content="https://www.abhijithudayakumar.com/media/assets/welcome-400x400.png" />
-  <meta name="twitter:creator" content="@https://twitter.com/AbhijithUdayak1">
+  <meta name="twitter:creator" content="@'''+ data['social']['Twitter'] +'''">
 
   <meta property="go:url" content="https://www.abhijithudayakumar.com" />
   <meta property="go:type" content="website" />
@@ -77,7 +231,7 @@
               <!-- <li class="navbar-navigation-root-item" data-menuanchor="work"><a class="navbar-navigation-root-link" href="#certificates">My Achievements</a>
                 </li> -->
               <li class="navbar-navigation-root-item" data-menuanchor="blog"><a class="navbar-navigation-root-link"
-                  href="https://abhijith14.hashnode.dev" target="_blank" rel="noopener">Blog</a>
+                  href="'''+ data['social']['blog'] +'''" target="_blank" rel="noopener">Blog</a>
               </li>
               <li class="navbar-navigation-root-item" data-menuanchor="contacts"><a class="navbar-navigation-root-link"
                   href="#contacts">Contact Me</a>
@@ -91,7 +245,7 @@
                   data-multi-switch='{"targets":".rd-navbar","scope":".rd-navbar","class":"navbar-info-active","isolate":"[data-multi-switch]"}'></button>
                 <div class="navbar-info">
                   <button class="btn btn-sm"
-                    onclick='window.location.href="https://github.com/Abhijith14/Abhijith14/raw/master/Resume.pdf";'>Get
+                    onclick='window.location.href="'''+ data['social']['Resume'] +'''";'>Get
                     My Resume</button>
                 </div>
               </div>
@@ -223,7 +377,7 @@
                 <div class="media-body">
                   <div class="blurb-title h5"><span data-toggle="tooltip" data-placement="top" title=""
                       data-original-title="Visit GitHub" style="cursor: pointer;"
-                      onclick='window.open("https://github.com/Abhijith14", "_blank");'>GitHub Profile</span></div>
+                      onclick='window.open("'''+ data['social']['Github'] +'''", "_blank");'>GitHub Profile</span></div>
                   <div class="blurb-text">Visit my GitHub profile to learn more about my coding projects.</div>
                 </div>
               </div>
@@ -240,7 +394,7 @@
                 <div class="media-body">
                   <div class="blurb-title h5"><span data-toggle="tooltip" data-placement="top" title=""
                       data-original-title="Visit Kaggle" style="cursor: pointer;"
-                      onclick='window.open("https://www.kaggle.com/abhijithudayakumar", "_blank");'>Kaggle
+                      onclick='window.open("'''+ data['social']['Kaggle'] +'''", "_blank");'>Kaggle
                       Profile</span></div>
                   <div class="blurb-text">Get to know more about my Machine Learning and Data Visualisation skills.
                   </div>
@@ -259,7 +413,7 @@
                 <div class="media-body">
                   <div class="blurb-title h5"><span data-toggle="tooltip" data-placement="top" title=""
                       data-original-title="Visit LinkedIn" style="cursor: pointer;"
-                      onclick='window.open("https://www.linkedin.com/in/abhijith-udayakumar-6372b91a3/", "_blank");'>LinkedIn</span>
+                      onclick='window.open("'''+ data['social']['LinkedIn'] +'''", "_blank");'>LinkedIn</span>
                   </div>
                   <div class="blurb-text">Connect with me @LinkedIn to know about my achievements and current work
                     profile.</div>
@@ -396,76 +550,7 @@
           <!-- Owl Carousel-->
           <div class="owl-carousel owl-style-1 owl-item-end"
             data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
-            
-        <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                <div class="pricing-body">
-                    <div class="pricing-title biggest h2">Project-CVM</div>
-                    <img src="media/lang/ai.png" alt="Artificial Intelligence" width="100%" height="100%" loading="lazy">
-                    <div class="pricing-divider">
-                    <hr class="divider">
-                    </div>
-                    <div class="pricing-list pricing-year">
-
-                    <ul class="list list-marked-check d-inline-block text-left">
-                        <li class="list-item">Contributors : 1</li>
-                        <li class="list-item">Issues : 0</li>
-                        <li class="list-item">Stars : 1</li>
-                        <li class="list-item">Forks : 0</li>
-                        <li class="list-item disabled">Description : A COMPUTER VISION PROJECT USING GOOGLE MEDIAPIPE</li>
-                    </ul>
-                    </div>
-                    <div class="pricing-btn">
-                    <button class="btn btn-sm" onclick='window.open("https://github.com/Abhijith14/Project-CVM");'>See Repo</button>
-                    </div>
-                </div>
-                </article>
-        
-        <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                <div class="pricing-body">
-                    <div class="pricing-title biggest h2">SnakeGame-ML</div>
-                    <img src="media/lang/ai.png" alt="Artificial Intelligence" width="100%" height="100%" loading="lazy">
-                    <div class="pricing-divider">
-                    <hr class="divider">
-                    </div>
-                    <div class="pricing-list pricing-year">
-
-                    <ul class="list list-marked-check d-inline-block text-left">
-                        <li class="list-item">Contributors : 1</li>
-                        <li class="list-item">Issues : 0</li>
-                        <li class="list-item">Stars : 8</li>
-                        <li class="list-item">Forks : 0</li>
-                        <li class="list-item disabled">Description : AI paying Snake Game using Reinforcement Learning - Python</li>
-                    </ul>
-                    </div>
-                    <div class="pricing-btn">
-                    <button class="btn btn-sm" onclick='window.open("https://github.com/Abhijith14/SnakeGame-ML");'>See Repo</button>
-                    </div>
-                </div>
-                </article>
-        
-        <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-                <div class="pricing-body">
-                    <div class="pricing-title biggest h2">PROJECT-L.A.Z.Y</div>
-                    <img src="https://raw.githubusercontent.com/Abhijith14/PROJECT-L.A.Z.Y/master/readme_assets/logo.png" alt="Python" width="100%" height="100%" loading="lazy">
-                    <div class="pricing-divider">
-                    <hr class="divider">
-                    </div>
-                    <div class="pricing-list pricing-year">
-
-                    <ul class="list list-marked-check d-inline-block text-left">
-                        <li class="list-item">Contributors : 1</li>
-                        <li class="list-item">Issues : 0</li>
-                        <li class="list-item">Stars : 5</li>
-                        <li class="list-item">Forks : 0</li>
-                        <li class="list-item disabled">Description : Automation to attend online classes based on timetable.</li>
-                    </ul>
-                    </div>
-                    <div class="pricing-btn">
-                    <button class="btn btn-sm" onclick='window.open("https://github.com/Abhijith14/PROJECT-L.A.Z.Y");'>See Repo</button>
-                    </div>
-                </div>
-                </article>
-        
+            '''+var_work+'''
           </div>
         </div>
       </div>
@@ -528,52 +613,7 @@
             data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
 
 
-            
-    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-              <div class="pricing-body">
-                <a href="media/badges/Abhijith Udayakumar_AI_APPRECIATE_BADGE.png" target="_blank"><img
-                    src="media/badges/Abhijith Udayakumar_AI_APPRECIATE_BADGE.png" alt="" width="100%" height="100%"
-                    loading="lazy"></a>
-                <div class="pricing-divider">
-                  <hr class="divider">
-                </div>
-                <div class="pricing-btn">
-                  <center><b>AI Appreciate 2021</b></center>
-                  AI FOR ALL | DIGITAL INDIA - INTEL INDIA<br>Jan 2022
-                </div>
-              </div>
-            </article>
-    
-    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-              <div class="pricing-body">
-                <a href="media/badges/hashnode_starter.png" target="_blank"><img
-                    src="media/badges/hashnode_starter.png" alt="" width="100%" height="100%"
-                    loading="lazy"></a>
-                <div class="pricing-divider">
-                  <hr class="divider">
-                </div>
-                <div class="pricing-btn">
-                  <center><b>Blog</b></center>
-                  Self Starter | Hashnode<br>July 2021
-                </div>
-              </div>
-            </article>
-    
-    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-              <div class="pricing-body">
-                <a href="media/badges/Abhijith Udayakumar_AI_AWARE_BADGE.png" target="_blank"><img
-                    src="media/badges/Abhijith Udayakumar_AI_AWARE_BADGE.png" alt="" width="100%" height="100%"
-                    loading="lazy"></a>
-                <div class="pricing-divider">
-                  <hr class="divider">
-                </div>
-                <div class="pricing-btn">
-                  <center><b>AI Aware 2021</b></center>
-                  AI FOR ALL | DIGITAL INDIA - INTEL INDIA<br>Jan 2022
-                </div>
-              </div>
-            </article>
-    
+            ''' + var_badge + '''
 
 
           </div>
@@ -606,127 +646,7 @@
           <div class="owl-carousel owl-style-1 owl-item-end"
             data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
 
-            
-    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-              <div class="pricing-body">
-                <a href="media/certificates/cognitive.png" target="_blank"><img
-                    src="media/certificates/cognitive.png" alt="" width="100%" height="100%"
-                    loading="lazy"></a>
-                <div class="pricing-divider">
-                  <hr class="divider">
-                </div>
-                <div class="pricing-btn">
-                  <center><b>Cognitive Application</b></center>
-                  Certificate of Participation | TECH-ANALOGY<br>Aug 2021
-                </div>
-              </div>
-            </article>
-    
-    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-              <div class="pricing-body">
-                <a href="media/certificates/cognitive2.png" target="_blank"><img
-                    src="media/certificates/cognitive2.png" alt="" width="100%" height="100%"
-                    loading="lazy"></a>
-                <div class="pricing-divider">
-                  <hr class="divider">
-                </div>
-                <div class="pricing-btn">
-                  <center><b>Cognitive Application</b></center>
-                  Certificate of Excellence | TECH-ANALOGY<br>Aug 2021
-                </div>
-              </div>
-            </article>
-    
-    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-              <div class="pricing-body">
-                <a href="media/certificates/AI-2.png" target="_blank"><img
-                    src="media/certificates/AI-2.png" alt="" width="100%" height="100%"
-                    loading="lazy"></a>
-                <div class="pricing-divider">
-                  <hr class="divider">
-                </div>
-                <div class="pricing-btn">
-                  <center><b>Artificial Intelligence</b></center>
-                  Certificate of Completion | MyCaptain<br>Jan 2021
-                </div>
-              </div>
-            </article>
-    
-    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-              <div class="pricing-body">
-                <a href="media/certificates/DataAnalaytics-1.png" target="_blank"><img
-                    src="media/certificates/DataAnalaytics-1.png" alt="" width="100%" height="100%"
-                    loading="lazy"></a>
-                <div class="pricing-divider">
-                  <hr class="divider">
-                </div>
-                <div class="pricing-btn">
-                  <center><b>Data Analytics</b></center>
-                  Certificate of Participation | MyCaptain<br>Feb 2021
-                </div>
-              </div>
-            </article>
-    
-    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-              <div class="pricing-body">
-                <a href="media/certificates/AI-1.png" target="_blank"><img
-                    src="media/certificates/AI-1.png" alt="" width="100%" height="100%"
-                    loading="lazy"></a>
-                <div class="pricing-divider">
-                  <hr class="divider">
-                </div>
-                <div class="pricing-btn">
-                  <center><b>Artificial Intelligence</b></center>
-                  Certificate of Competency | MyCaptain<br>Jan 2021
-                </div>
-              </div>
-            </article>
-    
-    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-              <div class="pricing-body">
-                <a href="media/certificates/srmredesign.png" target="_blank"><img
-                    src="media/certificates/srmredesign.png" alt="" width="100%" height="100%"
-                    loading="lazy"></a>
-                <div class="pricing-divider">
-                  <hr class="divider">
-                </div>
-                <div class="pricing-btn">
-                  <center><b>SRM WRRC</b></center>
-                  Certificate of Excellence | SRM WRRC<br>Oct 2021
-                </div>
-              </div>
-            </article>
-    
-    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-              <div class="pricing-body">
-                <a href="media/certificates/internshala.png" target="_blank"><img
-                    src="media/certificates/internshala.png" alt="" width="100%" height="100%"
-                    loading="lazy"></a>
-                <div class="pricing-divider">
-                  <hr class="divider">
-                </div>
-                <div class="pricing-btn">
-                  <center><b>Internshala Student Partner</b></center>
-                  <br>2021
-                </div>
-              </div>
-            </article>
-    
-    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>
-              <div class="pricing-body">
-                <a href="media/certificates/UIT - python.png" target="_blank"><img
-                    src="media/certificates/UIT - python.png" alt="" width="100%" height="100%"
-                    loading="lazy"></a>
-                <div class="pricing-divider">
-                  <hr class="divider">
-                </div>
-                <div class="pricing-btn">
-                  <center><b>Python Programming Contest</b></center>
-                  Certificate of Achievement | UIT<br>Aug 2020
-                </div>
-              </div>
-            </article>
-    
+            ''' + var_certificate + '''
           </div>
         </div>
         <br>
@@ -747,61 +667,7 @@
             <div class="owl-carousel owl-style-1"
               data-owl="{&quot;dots&quot;:true,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2}}}">
               <!-- Quote creative-->             
-              
-    <article class="quote quote-creative">
-        <div class="media media-xs flex-column flex-xs-row-reverse">
-            <div class="media-left">
-                <div class="quote-author-figure">
-                    <div class="quote-author-image-decor"></div>
-                    <img class="quote-author-image rounded-circle" src="media/testimonial/2.png" alt="" width="64"
-                        height="64" loading="lazy" />
-                </div>
-            </div>
-            <div class="media-body">
-                <div class="quote-author-name h5" style="text-align: left;">Ramla M</div>
-                <div class="quote-text" style="text-align: justify;">A tremendous student who is an asset to the department. He is exceptionally assiduous. He is not only good-humored and friendly but also is ever-ready to assist his fellow peers and explore new horizons with them. Being Tech Savvy, looking through the concepts and applying the context is his technology quotient.<br>The best part of him is that he would reach out in a very respectful and kind manner. Furthermore, his questions are always thoughtful and penetrating. Brimming with inquisitive thinking and innovative ideas makes him stand apart. Needless to say, He is a true quest for knowledge.</div>
-                <div class="quote-author-company" style="text-align: left;">Assistant Professor<br>Department of Computer Applications,<br>College of Science and Humanitites<br>SRM IST
-                </div>
-            </div>
-        </div>
-    </article>
-    
-    <article class="quote quote-creative">
-        <div class="media media-xs flex-column flex-xs-row-reverse">
-            <div class="media-left">
-                <div class="quote-author-figure">
-                    <div class="quote-author-image-decor"></div>
-                    <img class="quote-author-image rounded-circle" src="media/testimonial/3.png" alt="" width="64"
-                        height="64" loading="lazy" />
-                </div>
-            </div>
-            <div class="media-body">
-                <div class="quote-author-name h5" style="text-align: left;">Einstein Little Champs</div>
-                <div class="quote-text" style="text-align: justify;">It was great working with Buddy Developer Team, especially want to convey our thanks to Abhijith, for making all the changes patiently and getting our projects live timely. The work was effective and efficient. Amazing response and will definitely recommend Buddy Developer to others.</div>
-                <div class="quote-author-company" style="text-align: left;">Client,<br>Buddy Developer
-                </div>
-            </div>
-        </div>
-    </article>
-    
-    <article class="quote quote-creative">
-        <div class="media media-xs flex-column flex-xs-row-reverse">
-            <div class="media-left">
-                <div class="quote-author-figure">
-                    <div class="quote-author-image-decor"></div>
-                    <img class="quote-author-image rounded-circle" src="media/testimonial/1.png" alt="" width="64"
-                        height="64" loading="lazy" />
-                </div>
-            </div>
-            <div class="media-body">
-                <div class="quote-author-name h5" style="text-align: left;">B Udayakumar</div>
-                <div class="quote-text" style="text-align: justify;">This team is extremely client focused and highly responsible with profound understanding of our requirements. It is certified that the assignment work given to BUDDY Developer has been completed successfully. We are enormously satisfied with their quality and team work.</div>
-                <div class="quote-author-company" style="text-align: left;">IT Coordinator
-                </div>
-            </div>
-        </div>
-    </article>
-    
+              '''+ var_testimonial +'''
             </div>
           </div>
         </div>
@@ -812,55 +678,7 @@
       <div class="container">
         <h2 class="text-center">My Partners</h2>
         <div class="row row-offset-xl no-gutters partner-group">
-         
-     <div class="col-4 col-sm-3 partner-group-item"><a class="partner" aria-label="collab" id="removeHref1"
-              href="https://www.abhijithudayakumar.com/" onclick="removeLink(this.id);" style="cursor: default;">
-              <img class="partner-image" src="media/collab/jyothis.png" alt="" width="600" height="180"
-                loading="lazy" />
-            </a></div>
-    
-     <div class="col-4 col-sm-3 partner-group-item"><a class="partner" aria-label="collab" id="removeHref2"
-              href="https://www.abhijithudayakumar.com/" onclick="removeLink(this.id);" style="cursor: default;">
-              <img class="partner-image" src="media/collab/tzd.png" alt="" width="600" height="180"
-                loading="lazy" />
-            </a></div>
-    
-     <div class="col-4 col-sm-3 partner-group-item"><a class="partner" aria-label="collab" id="removeHref3"
-              href="https://www.abhijithudayakumar.com/" onclick="removeLink(this.id);" style="cursor: default;">
-              <img class="partner-image" src="media/collab/gcs.png" alt="" width="600" height="180"
-                loading="lazy" />
-            </a></div>
-    
-     <div class="col-4 col-sm-3 partner-group-item"><a class="partner" aria-label="collab" id="removeHref4"
-              href="https://www.abhijithudayakumar.com/" onclick="removeLink(this.id);" style="cursor: default;">
-              <img class="partner-image" src="media/collab/ash.png" alt="" width="600" height="180"
-                loading="lazy" />
-            </a></div>
-    
-     <div class="col-4 col-sm-3 partner-group-item"><a class="partner" aria-label="collab" id="removeHref5"
-              href="https://www.abhijithudayakumar.com/" onclick="removeLink(this.id);" style="cursor: default;">
-              <img class="partner-image" src="media/collab/allsaints.png" alt="" width="600" height="180"
-                loading="lazy" />
-            </a></div>
-    
-     <div class="col-4 col-sm-3 partner-group-item"><a class="partner" aria-label="collab" id="removeHref6"
-              href="https://www.abhijithudayakumar.com/" onclick="removeLink(this.id);" style="cursor: default;">
-              <img class="partner-image" src="media/collab/pelleti.png" alt="" width="600" height="180"
-                loading="lazy" />
-            </a></div>
-    
-     <div class="col-4 col-sm-3 partner-group-item"><a class="partner" aria-label="collab" id="removeHref7"
-              href="https://www.abhijithudayakumar.com/" onclick="removeLink(this.id);" style="cursor: default;">
-              <img class="partner-image" src="media/collab/smilelife.png" alt="" width="600" height="180"
-                loading="lazy" />
-            </a></div>
-    
-     <div class="col-4 col-sm-3 partner-group-item"><a class="partner" aria-label="collab" id="removeHref8"
-              href="https://www.abhijithudayakumar.com/" onclick="removeLink(this.id);" style="cursor: default;">
-              <img class="partner-image" src="media/collab/elc.png" alt="" width="600" height="180"
-                loading="lazy" />
-            </a></div>
-    
+         '''+var_partners+'''
         </div>
       </div>
     </section>
@@ -918,13 +736,13 @@
                 <div class="col-md-6 col-lg-12 col-xl-6">
                   <h4>Reference:</h4>
                   <div class="group-30 offset-sm">
-                    <a class="btn btn-app pl-1" href="https://www.kaggle.com/abhijithudayakumar" target="_blank"
+                    <a class="btn btn-app pl-1" href="'''+ data['social']['Kaggle'] +'''" target="_blank"
                       rel="noopener">
                       <span class="btn-icon icon icon-round icon-sm icon-primary icon-style-3"><img
                           src="media/logo-kaggle.png" width="24px" height="24px" alt="kaggle" loading="lazy"></span>
                       <span>Kaggle.com</span>
                     </a>
-                    <a class="btn btn-app pl-1" href="https://github.com/Abhijith14" target="_blank" rel="noopener">
+                    <a class="btn btn-app pl-1" href="'''+ data['social']['Github'] +'''" target="_blank" rel="noopener">
                       <span class="btn-icon icon icon-round icon-sm icon-primary icon-style-3 mdi-github-box"></span>
                       <span>GitHub.com</span>
                     </a>
@@ -963,13 +781,13 @@
                   <ul class="list list-social">
                     <li class="list-social-item"><a aria-label="social"
                         class="icon icon-circle icon-md icon-style-1 mdi-facebook"
-                        href="https://www.facebook.com/abhijith.udayakumar.14" target="_blank" rel="noopener"></a></li>
+                        href="'''+ data['social']['Facebook'] +'''" target="_blank" rel="noopener"></a></li>
                     <li class="list-social-item"><a aria-label="social"
                         class="icon icon-circle icon-md icon-style-1 mdi-twitter"
-                        href="https://twitter.com/AbhijithUdayak1" target="_blank" rel="noopener"></a></li>
+                        href="'''+ data['social']['Twitter'] +'''" target="_blank" rel="noopener"></a></li>
                     <li class="list-social-item"><a aria-label="social"
                         class="icon icon-circle icon-md icon-style-1 mdi-instagram"
-                        href="https://www.instagram.com/a_b_h_i_j_i_t_h._.14/" target="_blank" rel="noopener"></a></li>
+                        href="'''+ data['social']['Instagram'] +'''" target="_blank" rel="noopener"></a></li>
                   </ul>
                 </div>
                 <div>
@@ -1029,3 +847,505 @@
 </body>
 
 </html>
+'''
+
+
+# =====================================================================================================================================
+
+
+
+def mobile_view(category, position):
+  pro_count = position
+  mobile_body = '''<!-- mobile view -->'''
+  for _, mobile_data in enumerate(data['works']):
+    if _ >= position-1:
+      if mobile_data['category'] == category:
+        mobile_body = mobile_body + '''
+                        <!-- Project ''' + str(pro_count) + ''' (in mobile) -->
+                        <article class="pricing pricing-primary block block-sm block-center mobile-custom"
+                          data-animate='{"class":"fadeInUp"}'>
+                          <div class="pricing-body">
+                            <div class="pricing-title biggest h2">''' + str(mobile_data['name']) + '''</div>
+                            <img src="''' + str(mobile_data['logo']) + '''" loading="lazy">
+                            <div class="pricing-divider">
+                              <hr class="divider">
+                            </div>
+                            <div class="pricing-list pricing-year">
+
+                              <ul class="list list-marked-check d-inline-block text-left">
+                                <li class="list-item">Contributors : ''' + str(mobile_data['contributors']) + '''</li>
+                                <li class="list-item">Issues : ''' + str(mobile_data['issues']) + '''</li>
+                                <li class="list-item">Stars : ''' + str(mobile_data['stars']) + '''</li>
+                                <li class="list-item">Forks : ''' + str(mobile_data['forks']) + '''</li>
+                                <li class="list-item disabled">Description : ''' + str(mobile_data['desc']) + '''
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="pricing-btn">
+                              <button class="btn btn-sm"
+                                onclick='window.open("''' + str(mobile_data['repo']) + '''");'>See
+                                Repo</button>
+                            </div>
+                          </div>
+                        </article>
+        '''
+        pro_count = pro_count + 1
+  return mobile_body
+
+
+# print(mobile_view('Python', 4))
+
+var_cats = []
+for work in data['works']:
+    var_cats.append(work['category'])
+
+var_cats = [i for n, i in enumerate(var_cats) if i not in var_cats[:n]]
+
+var_nav = ""
+for ind, nav_cats in enumerate(var_cats):
+    tab_id = "tabs-"+str(ind+1)
+    if ind == 0:
+        var_nav = var_nav + '''
+            <li class="nav-item" role="presentation"><a id="custom" class="nav-link show active" href="#''' + tab_id + '''" data-toggle="tab">''' + nav_cats + '''</a></li>
+            '''
+    else:
+        var_nav = var_nav + '''
+            <li class="nav-item" role="presentation"><a id="custom" class="nav-link" href="#''' + tab_id + '''" data-toggle="tab">''' + nav_cats + '''</a></li>
+            '''
+
+
+print(var_cats)
+
+var_body = ""
+curr_work_index = 0
+for ind, i in enumerate(var_cats): # category loop
+    var_body = var_body + '''
+    <!-- '''+ str(i) +''' -->
+    '''
+    if ind == 0:
+        var_body = var_body + '''
+            <div class="tab-pane fade show active" id="tabs-''' + str(ind+1) + '''">
+            '''
+    else:
+        var_body = var_body + '''
+            <div class="tab-pane fade" id="tabs-''' + str(ind+1) + '''">
+            '''
+    var_body = var_body + '''
+                    <div class="container position-relative">
+          <div class="group-20 d-sm-flex align-items-sm-end justify-content-sm-between text-center">
+            <h2></h2>
+            <div>
+                    <!-- Multi switch-->
+                    <div class="switch-text group-25 d-inline-flex align-items-center justify-content-center" id="multiswitch">
+                      <div><span class="switch-text-left biggest">Detailed View</span><span class="switch-text-right biggest ml-2 border-left pl-2">Normal View</span></div>
+                            <div class="switch-toggle-modern" data-multi-switch='{"targets":"#multiswitch, #pricing-group","state":true}'>
+                              <div class="guide"></div>
+                              <div class="slider">
+                                <div class="slider-dot"></div>
+                                <div class="slider-dot"></div>
+                              </div>
+                            </div>
+                    </div>
+            </div>
+          </div>
+
+          <div class="pricing-group offset-xs" id="pricing-group">'''
+
+    curr_cat_count = 0
+    for work in data['works']:
+      # count of works in category
+      if work['category'] == i:
+        curr_cat_count = curr_cat_count + 1
+    
+    # calculate number of rows required
+    num_rows = math.ceil(curr_cat_count/3)
+       
+    work_count = 0
+    row_count = 1
+    project_count = 1
+    for work in data['works']:
+      if work['category'] == i:
+        work_count = work_count + 1
+        if work_count > 3:
+          work_count = 1
+          row_count = row_count + 1        
+
+        if work_count == 1:
+          if row_count > 1:
+            if row_count == 2:
+              var_body = var_body + mobile_view(i, project_count)
+            var_body = var_body + '''</div>'''
+            var_body = var_body + '''
+            <!-- Row '''+ str(row_count) +''' -->
+                <div class="owl-carousel owl-style-1 owl-item-end pc-custom" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
+            '''
+          else:
+            var_body = var_body + '''
+            <!-- Row '''+ str(row_count) +''' -->
+                <div class="owl-carousel owl-style-1 owl-item-end" data-owl="{&quot;loop&quot;:false,&quot;mouseDrag&quot;:false,&quot;dots&quot;:true,&quot;autoplay&quot;:false,&quot;responsive&quot;:{&quot;768&quot;:{&quot;items&quot;:2},&quot;992&quot;:{&quot;items&quot;:3},&quot;1600&quot;:{&quot;items&quot;:3,&quot;margin&quot;:90}}}">
+            '''
+        var_header = ""
+        if work['header']:
+          var_header = '''<div class="pricing-badge">'''+ str(work['header']) +'''</div>'''
+        var_scope = ""
+        if work['category'] == "Websites":
+          var_scope = '''<button class="btn btn-sm"
+                                onclick='window.open("''' + str(work['link']) + '''");'>Visit Website</button><br>
+                            '''
+        var_access_body = '''<li class="list-item">Contributors : ''' + str(work['contributors']) + '''</li>
+                            <li class="list-item">Issues : ''' + str(work['issues']) + '''</li>
+                            <li class="list-item">Stars : ''' + str(work['stars']) + '''</li>
+                            <li class="list-item">Forks : ''' + str(work['forks']) + '''</li>
+                            <li class="list-item disabled">Description : ''' + str(work['desc']) + '''</li>'''
+        if work['Access'] == 1:
+          var_scope = var_scope + '''<button class="btn btn-sm" data-modal-trigger="{&quot;target&quot;:&quot;#modal&quot;}">See Repo</button>'''
+          var_access_body = '''<li class="list-item disabled">This is a Private Repo !</li>'''
+        else:
+          var_scope = var_scope + '''<button class="btn btn-sm" onclick='window.open("''' + str(work['repo']) + '''");'>See Repo</button>'''
+        var_body = var_body + '''
+        <!-- Project '''+str(project_count)+''' -->
+                    <article class="pricing pricing-primary block block-sm block-center" data-animate='{"class":"fadeInUp"}'>''' + var_header +  '''<div class="pricing-body">
+                        <div class="pricing-title biggest h2">''' + str(work['name']) + '''</div>
+                        <img src="''' + str(work['logo']) + '''" loading="lazy">
+                        <div class="pricing-divider">
+                          <hr class="divider">
+                        </div>
+                        <div class="pricing-list pricing-year">
+                          
+                          <ul class="list list-marked-check d-inline-block text-left">
+                            '''+ var_access_body +'''
+                          </ul>
+                        </div>
+                        <div class="pricing-btn">
+                          '''+ var_scope +'''
+                        </div>
+                      </div>
+                    </article>
+        '''
+        project_count = project_count + 1
+    var_body = var_body + '''</div>
+          </div>
+        </div>
+                  </div>'''
+
+# print(var_body)
+
+
+code_workpage='''
+<!DOCTYPE html>
+<html lang="en" id="zoom_ele">
+  <head>
+    <title>Abhijith Udayakumar | Portfolio - Works</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="components/cdn/3ts2ksMwXvKRuG480KNifJ2_JNM.js"></script><link rel="icon" href="media/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="components/base/base-2.css">
+
+    <link rel="preload" as="image" href="media/lang/c.png">
+    <link rel="preload" as="image" href="media/lang/cpp.png">
+    <link rel="preload" as="image" href="media/lang/csharp.png">
+    <link rel="preload" as="image" href="media/lang/dart.png">
+    <link rel="preload" as="image" href="media/lang/java.png">
+    <link rel="preload" as="image" href="media/lang/jupyter.png">
+    <link rel="preload" as="image" href="media/lang/kotlin.png">
+    <link rel="preload" as="image" href="media/lang/python.png">
+    <link rel="preload" as="image" href="media/lang/vb.png">
+
+    <link rel="preload" as="image" href="media/webs/1.png">
+    <link rel="preload" as="image" href="media/webs/2.png">
+    <link rel="preload" as="image" href="media/webs/3.png">
+    <link rel="preload" as="image" href="media/webs/4.png">
+    <link rel="preload" as="image" href="media/webs/5.png">
+    <link rel="preload" as="image" href="media/webs/6.png">
+    <link rel="preload" as="image" href="media/webs/7.png">
+    <link rel="preload" as="image" href="media/webs/8.png">
+    <link rel="preload" as="image" href="media/webs/9.png">
+    <link rel="preload" as="image" href="media/webs/10.gif">
+    <link rel="preload" as="image" href="media/webs/11.png">
+    <link rel="preload" as="image" href="media/webs/12.png">
+    <link rel="preload" as="image" href="media/webs/13.png">
+    <link rel="preload" as="image" href="media/webs/14.png">
+
+    <script src="components/base/core.min.js"></script>
+    <script src="components/base/script.js"></script>
+    <style type="text/css">
+    	#custom.active{
+    		color: #354471 !important;
+    	}
+    	@media only screen and (max-width: 1000px) {
+	    	.pc-custom{
+	    		display: none !important;
+	    	}
+    	}
+    	@media only screen and (min-width: 1000px) {
+	    	.mobile-custom{
+	    		display: none !important;
+	    	}
+	    	.owl-dots
+	    	{
+	    		display: none !important;
+	    	}
+	    }
+    </style>
+    <script type="text/javascript">
+    function toggleZoomScreen() {
+      var data = document.getElementById('zoom_ele');
+       data.style.width = "950px";
+       data.style.height = "1080px";
+   } 
+  </script>
+  </head>
+  <body>
+    <div class="page">
+      <!--RD Navbar-->
+      <header class="section rd-navbar-wrap">
+        <nav class="rd-navbar context">
+          <div class="navbar-container">
+            <div class="navbar-cell">
+              <div class="navbar-panel">
+                <button class="navbar-switch" data-multi-switch='{"targets":".rd-navbar","scope":".rd-navbar","isolate":"[data-multi-switch]"}'></button>
+                <div class="navbar-logo"><a class="navbar-logo-link" href=""><img class="navbar-logo-inverse" src="media/logo1.svg" alt="Logo" width="300" height="30" loading="lazy"/></a></div>
+              </div>
+            </div>
+            <div class="navbar-spacer"></div>
+            <div class="navbar-cell navbar-sidebar">
+              <ul class="navbar-navigation rd-navbar-nav fullpage-navigation">
+                <li class="navbar-navigation-root-item" data-menuanchor="home"><a class="navbar-navigation-root-link" href="index.html#home">Home</a>
+                </li>
+                <li class="navbar-navigation-root-item" data-menuanchor="about"><a class="navbar-navigation-root-link" href="index.html#about">About Me</a>
+                </li>
+                <li class="navbar-navigation-root-item active" data-menuanchor="work"><a class="navbar-navigation-root-link" href="">My Works</a>
+                </li>
+                
+                <li class="navbar-navigation-root-item" data-menuanchor="blog"><a class="navbar-navigation-root-link" href="'''+ data['social']['blog'] +'''">Blog</a>
+                </li>
+                <li class="navbar-navigation-root-item" data-menuanchor="contacts"><a class="navbar-navigation-root-link" href="index.html#contacts">Contact Me</a>
+                </li>
+              </ul>
+            </div>
+            <div class="navbar-cell">
+              <div class="navbar-subpanel">
+                <div class="navbar-subpanel-item">
+                  <button class="navbar-button navbar-info-button mdi-dots-vertical" data-multi-switch='{"targets":".rd-navbar","scope":".rd-navbar","class":"navbar-info-active","isolate":"[data-multi-switch]"}'></button>
+                  <div class="navbar-info">
+                    <button class="btn btn-sm" onclick="window.location.href='https://raw.githubusercontent.com/Abhijith14/Abhijith14/34c38a706bca4529cf2e59bfec46a63a0fd47e17/Resume.pdf';">Get My Resume</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <br>
+      <br>
+      <br>
+      <br>
+      <!-- Features-->
+      <section class="section section-md pb-lg-0" id="features">
+        <div class="container">
+          <div class="row row-10">
+            <!-- <div class="col-10 col-sm-8 col-lg-6 col-xxl-7 text-center">
+            	<img src="media/image-08-698x554.png" alt="" width="698" height="554">
+            </div> -->
+            <div class="col-lg-10 col-xxl-12 pb-lg-4">
+              <div class="title-icon group-20 mt-xxl-2"><span class="icon icon-circle icon-lg icon-style-4 mdi-codepen"></span>
+                <h2 onclick="toggleZoomScreen();">My Works</h2>
+              </div>
+              <div class="tab tab-line">
+                <ul class="nav nav-line nav-line-mod-2 bigger active">
+                '''+ var_nav +'''
+                 <!-- <li class="nav-item" role="presentation"><a id="custom" class="nav-link show active" href="#tabs-1-1" data-toggle="tab">Python</a></li>
+                  <li class="nav-item" role="presentation"><a id="custom" class="nav-link" href="#tabs-1-2" data-toggle="tab">Machine Learning</a></li>
+                  <li class="nav-item" role="presentation"><a id="custom" class="nav-link" href="#tabs-1-3" data-toggle="tab">Java</a></li>
+                  <li class="nav-item" role="presentation"><a id="custom" class="nav-link" href="#tabs-1-4" data-toggle="tab">C/C++</a></li>
+                  <li class="nav-item" role="presentation"><a id="custom" class="nav-link" href="#tabs-1-5" data-toggle="tab">C#</a></li>
+                  <li class="nav-item" role="presentation"><a id="custom" class="nav-link" href="#tabs-1-6" data-toggle="tab">VB.NET</a></li>
+                  <li class="nav-item" role="presentation"><a id="custom" class="nav-link" href="#tabs-1-7" data-toggle="tab">Websites</a></li>
+                  <li class="nav-item" role="presentation"><a id="custom" class="nav-link" href="#tabs-1-8" data-toggle="tab">Apps</a></li> -->
+                </ul>
+                <!-- Tab panes-->
+                <div class="tab-content pt-3">
+                  
+    '''+ var_body +'''       
+
+                </div>
+                <!-- Modal-->
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-body text-center">
+                <h4>Request for <br>Repo Access</h4>
+                <!--RD Mailform-->
+                <form class="rd-mailform" data-form-output="modal-form-output-global" data-form-type="contact" method="post" action="components/rd-mailform/rd-mailform.php">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="name" placeholder="Your name *" data-constraints="@Required">
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control" type="email" name="email" placeholder="Your E-mail *" data-constraints="@Email @Required">
+                  </div>
+                  <div class="offset-xs">
+                    <button class="btn btn-block" type="submit">Send Request</button>
+                  </div>
+                  <br>
+                  <span>This repo has private scope.</span>
+                </form>
+              </div>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-output snackbar snackbar-secondary" id="modal-form-output-global"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+      
+      <!-- Get in touch-->
+      <section class="section section-xl position-relative" id="contacts">
+        <div class="bg-layer-2">
+          <svg class="image-svg" width="1920" height="792" viewBox="0 0 1920 792" fill="none">
+            <path d="M1305 120.5L-4.12635e-05 120.5L-5.1798e-05 6.10352e-05L1920 -0.000106817L1920 592.5L1510 592.5C1452.01 592.5 1405 545.49 1405 487.5L1405 220.5C1405 165.271 1360.23 120.5 1305 120.5Z" fill="#DEEBF7"></path>
+          </svg>
+        </div>
+        <div class="container">
+          <div class="row row-30 align-items-xl-center justify-content-xxl-between">
+            <div class="col-lg-6">
+              <h2>Get in Touch</h2>
+              <p class="bigger op-6">Have a question about our app? Don’t hesitate to contact us directly using the form on this page or by visiting our office.</p>
+              <form class="rd-mailform mr-xxl-5" data-form-output="form-output-global" data-form-type="contact" method="post" action="components/rd-mailform/rd-mailform.php">
+                <div class="row row-30">
+                  <div class="col-xs-6">
+                    <div class="form-group">
+                      <input class="form-control" type="text" name="name" placeholder="Your name *" data-constraints="@Required">
+                    </div>
+                  </div>
+                  <div class="col-xs-6">
+                    <div class="form-group">
+                      <input class="form-control" type="email" name="email" placeholder="Your e-mail address *" data-constraints="@Email @Required">
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-group">
+                      <textarea class="form-control" name="question" placeholder="Your question" rows="5" data-constraints="@Required"></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="offset-sm group-40 d-flex flex-wrap flex-xs-nowrap align-items-center">
+                  <button class="btn" type="submit">Send Message</button>
+                        <!-- Checkbox-->
+                        <div class="custom-control custom-checkbox">
+                          <input class="custom-control-input" type="checkbox" id="check1">
+                          <label class="custom-control-label" for="check1">Get weekly news and updates
+                          </label>
+                        </div>
+                </div>
+              </form>
+            </div>
+            <div class="col-lg-6">
+              <div class="box px-xl-3 px-xxl-4">
+                <div class="row row-30">
+                  <div class="col-md-6 col-lg-12 col-xl-6">
+                    <h4>Reference:</h4>
+                    <div class="group-30 offset-sm">
+                      <a class="btn btn-app pl-1" href="#">
+                        <span class="btn-icon icon icon-round icon-sm icon-primary icon-style-3 mdi-code-greater-than-or-equal"></span>
+                        <span>Kaggle.com</span>
+                      </a>
+                      <a class="btn btn-app pl-1" href="#">
+                        <span class="btn-icon icon icon-round icon-sm icon-primary icon-style-3 mdi-github-box"></span>
+                        <span>GitHub.com</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-lg-12 col-xl-6">
+                    <h4>Contacts:</h4>
+                    <table class="table table-sm table-responsive-xl table-no-bordered bigger">
+                      <tbody>
+                        <tr>
+                          <td class="text-right op-6 pl-0 align-middle">Ph.</td>
+                          <td class="biggest"><a class="link-inherit" href="tel:919946883500">+91 9946883500</a></td>
+                        </tr>
+                        <tr>
+                          <td class="text-right op-6 pl-0">Mail.</td>
+                          <td>
+                          	<a class="link-inherit" href="mailto:abhijithukzm@gmail.com" style="font-size: 14px;">abhijithukzm@gmail.com</a>
+                          	<br>
+                          	<a class="link-inherit" href="mailto:buddy.assistant14@gmail.com" style="font-size: 14px;">buddy.assistant14@gmail.com</a></td>
+                        </tr>
+                        <!-- <tr>
+                          <td class="text-right op-6 pl-0">Office.</td>
+                          <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+                        </tr> -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <hr class="divider">
+                <div class="group-20 d-flex flex-wrap align-items-center justify-content-between">
+                  <div>
+                          <!-- List social-->
+                          <ul class="list list-social">
+                            <li class="list-social-item"><a class="icon icon-circle icon-md icon-style-1 mdi-facebook" href="'''+ data['social']['Facebook'] +'''"></a></li>
+                            <li class="list-social-item"><a class="icon icon-circle icon-md icon-style-1 mdi-twitter" href="'''+ data['social']['Twitter'] +'''"></a></li>
+                            <li class="list-social-item"><a class="icon icon-circle icon-md icon-style-1 mdi-instagram" href="'''+ data['social']['Instagram'] +'''"></a></li>
+                          </ul>
+                  </div>
+                  <div>
+                          <!-- Copyright-->
+                          <p class="rights bigger"><span>&copy; 2021.&nbsp;</span><span></span><span> All rights reserved</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-output snackbar snackbar-secondary" id="form-output-global"></div>
+      </section>
+    </div>
+    <!-- Modal-->
+    <div class="modal fade" id="modal-login" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body text-center">
+            <h3>Log In</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing</p>
+            <form class="rd-mailform">
+              <div class="form-group">
+                <input class="form-control" type="text" name="name" placeholder="Your name *" data-constraints="@Required">
+              </div>
+              <div class="form-group">
+                <input class="form-control" type="password" name="password" placeholder="Password *" data-constraints="@Required">
+              </div>
+              <div class="offset-xxs group-40 d-flex flex-wrap flex-xs-nowrap align-items-center">
+                <button class="btn btn-block" type="submit">Log in</button>
+              </div>
+            </form>
+          </div>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        </div>
+      </div>
+    </div>
+    <!-- Preloader-->
+    <div class="preloader">
+      <div class="preloader-inner">
+        <div class="preloader-dot"></div>
+        <div class="preloader-dot"></div>
+        <div class="preloader-dot"></div>
+        <div class="preloader-dot"></div>
+      </div>
+    </div>
+  </body>
+</html>'''
+
+
+
+save(code_homepage, './index.html')
+save(code_workpage, './work.html')
+
+# Closing json
+f.close()
