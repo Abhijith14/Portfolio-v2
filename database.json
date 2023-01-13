@@ -59,17 +59,17 @@
         }
     ],
     "certificates": [
-        {
-            "name": "Slash Key",
-            "desc": "First Prize | IEEE",
-            "date": "July 2022",
-            "img": "media/certificates/slash-key.png"
-        },
          {
             "name": "Cognitive Application",
             "desc": "Certificate of Participation | TECH-ANALOGY",
             "date": "Aug 2021",
             "img": "media/certificates/cognitive.png"
+        },
+        {
+            "name": "Slash Key - 30 hr Hackathon",
+            "desc": "First Prize | IEEE",
+            "date": "July 2022",
+            "img": "media/certificates/slash-key.png"
         },
         {
             "name": "Cognitive Application",
