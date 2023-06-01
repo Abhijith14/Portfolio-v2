@@ -22,6 +22,9 @@ jobs:
 
       - name: execute main.py
         run: python automation/main.py
+      
+      - name: Delay
+        run: sleep 60
         
       - name: commit files
         run: |
