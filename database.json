@@ -110,6 +110,9 @@
     ],
     "partners": [
         {
+            "img": "media/collab/exxiero.png"
+        },
+        {
             "img": "media/collab/jyothis.png"
         },
         {
@@ -117,9 +120,6 @@
         },
         {
             "img": "media/collab/gcs.png"
-        },
-        {
-            "img": "media/collab/ash.png"
         },
         {
             "img": "media/collab/allsaints.png"
