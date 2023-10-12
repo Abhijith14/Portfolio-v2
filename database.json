@@ -59,6 +59,12 @@
         }
     ],
     "certificates": [
+         {
+            "name": "Slash Key | 30H Hackathon",
+            "desc": "First Position | IEEE",
+            "date": "Jul 2022",
+            "img": "media/certificates/slash-key.png"
+        },
         {
             "name": "Cognitive Application",
             "desc": "Certificate of Participation | TECH-ANALOGY",
