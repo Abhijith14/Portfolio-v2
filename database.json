@@ -553,7 +553,7 @@
         {
             "name": "Project-CVM",
             "category": "Artificial Intelligence",
-            "logo": "media/lang/ai.png",
+            "logo": "https://raw.githubusercontent.com/Abhijith14/Project-CVM/master/readme_assets/logo.png",
             "contributors": 1,
             "issues": 0,
             "stars": 7,
